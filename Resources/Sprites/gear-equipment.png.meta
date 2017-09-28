@@ -1,0 +1,269 @@
+fileFormatVersion: 2
+guid: 8e1eac6b8372a4c07b5e275f167ba4f2
+timeCreated: 1500780704
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: gear_equipment
+    21300002: gear_module_panel
+    21300004: eq_cloth
+    21300006: eq_helm
+    21300008: eq_weapon
+    21300010: eq_armor
+    21300012: eq_ring
+    21300014: eq_artifact
+    21300016: gear_buy_upgrade_panel
+    21300018: gear_buy_btn
+    21300020: gear_upgrade_btn
+    21300022: gear_item_panel
+    21300024: eq_ring
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: iPhone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: WebGL
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: gear_equipment
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 330
+        width: 370
+        height: 239
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 38, y: 38, z: 42, w: 38}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: gear_module_panel
+      rect:
+        serializedVersion: 2
+        x: 418
+        y: 167
+        width: 396
+        height: 400
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 7, y: 7, z: 6, w: 5}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: eq_cloth
+      rect:
+        serializedVersion: 2
+        x: 850
+        y: 413
+        width: 101
+        height: 152
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 3, z: 4, w: 4}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: eq_helm
+      rect:
+        serializedVersion: 2
+        x: 976
+        y: 512
+        width: 52
+        height: 54
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 2, y: 2, z: 2, w: 2}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: eq_weapon
+      rect:
+        serializedVersion: 2
+        x: 1054
+        y: 354
+        width: 87
+        height: 209
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 5, y: 7, z: 5, w: 5}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: eq_armor
+      rect:
+        serializedVersion: 2
+        x: 847
+        y: 247
+        width: 99
+        height: 145
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 3, y: 3, z: 3, w: 4}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: eq_artifact
+      rect:
+        serializedVersion: 2
+        x: 906
+        y: 181
+        width: 45
+        height: 47
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 6, y: 3, z: 4, w: 4}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: gear_buy_upgrade_panel
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 211
+        width: 372
+        height: 99
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 7, y: 0, z: 7, w: 5}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: gear_buy_btn
+      rect:
+        serializedVersion: 2
+        x: 266
+        y: 93
+        width: 59
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 7, y: 7, z: 7, w: 5}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: gear_upgrade_btn
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 93
+        width: 59
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 6, y: 7, z: 7, w: 5}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: gear_item_panel
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 141
+        width: 356
+        height: 44
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: eq_ring
+      rect:
+        serializedVersion: 2
+        x: 846
+        y: 180
+        width: 46
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 7, y: 7, z: 6, w: 6}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
