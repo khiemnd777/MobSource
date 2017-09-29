@@ -57,6 +57,10 @@ namespace Mob
 		public const string EVENT_REFRESH_SYNC_HP = "refresh-sync-hp";
 		public const string EVENT_REFRESH_SYNC_ENERGY = "refresh-sync-energy";
 		public const string EVENT_REFRESH_SYNC_GOLD = "refresh-sync-gold";
+		public const string EVENT_GOLD_DICE_ROLLED = "gold-dice-rolled";
+		public const string EVENT_ENERGY_DICE_ROLLED = "energy-dice-rolled";
+		public const string EVENT_GOLD_CHANGED = "gold-changed";
+		public const string EVENT_ENERGY_CHANGED = "energy-changed";
 		public const string EVENT_REFRESH_SYNC_GEARS_BY_TYPE = "refresh-sync-gears-by-type";
 		public const string EVENT_REFRESH_SYNC_AVAILABLE_GEARS_BY_TYPE = "refresh-sync-available-gears-by-type";
 		public const string EVENT_REFRESH_SYNC_GEARS = "refresh-sync-gears";

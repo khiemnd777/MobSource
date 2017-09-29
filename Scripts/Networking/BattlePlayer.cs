@@ -39,14 +39,14 @@ namespace Mob
 				p.DefaultValue ();
 				p.playerNetId = netId.Value;
 				p.GetModule<GoldModule> (x => {
-					x.AddGold(9999f);
+					x.AddGold(10);
 				});
 				p.GetModule<EnergyModule> (x => {
-					x.maxEnergy = 9999f;
-					x.AddEnergy(9999f);
+					x.maxEnergy = 12;
+					x.AddEnergy(0);
 				});
 				p.GetModule<StatModule> (x => {
-					x.point = 9999;
+					x.point = 20;
 				});
 				p.transform.SetParent (transform);
 				character = p;

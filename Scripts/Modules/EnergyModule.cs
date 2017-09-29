@@ -14,11 +14,13 @@ namespace Mob
 	{
 		public float maxEnergy;
 
-//		[SyncVar(hook="OnChangeEnergy")]
+		[SyncVar(hook="OnChangeEnergy")]
 		public float energy;
 
 		[SyncVar]
 		public SyncEnergyField syncEnergyField = new SyncEnergyField();
+
+		public int dice;
 
 		public float energyLabel;
 
@@ -34,6 +36,24 @@ namespace Mob
 				energy = energy
 			};
 		}
+
+		[Command]
+        public void CmdRollDice()
+        {
+			RollDice();
+			RpcRollDiceCallback();
+        }
+
+		[ClientRpc]
+		void RpcRollDiceCallback(){
+			EventManager.TriggerEvent(Constants.EVENT_ENERGY_DICE_ROLLED, new { dice = dice, ownNetId = _race.netId.Value });
+		}
+
+        public void RollDice()
+        {
+			dice = Random.Range(1, 10);
+			AddEnergy(dice);
+        }
 
 		public void AddEnergy (float e)
 		{
@@ -59,7 +79,7 @@ namespace Mob
 		}
 
 		void OnChangeEnergy(float currentEnergy){
-			EventManager.TriggerEvent (Constants.EVENT_REFRESH_SYNC_ENERGY, new { energy = currentEnergy, ownNetId = _race.netId.Value });
+			EventManager.TriggerEvent (Constants.EVENT_ENERGY_CHANGED, new { energy = currentEnergy, ownNetId = _race.netId.Value });
 		}
 	}
 }
