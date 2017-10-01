@@ -15,6 +15,7 @@ namespace Mob
 
 		Race _character;
 		CountdownNetworkModule _countdownModule;
+		RefereeModule _refereeModule;
 
 		void Start(){
 			endTurnBtn.onClick.AddListener(EndTurn);
@@ -55,24 +56,25 @@ namespace Mob
 		void Init(){
 			if(isInit)
                 return;
-            _countdownModule.CmdRefreshAndRun();
+				
             isInit = true;
 		}
 
 		void EndTurn(){
-			_countdownModule.CmdStop();
+			_refereeModule.CmdEndTurn();
 		}
 
 		bool TryToConnect()
         {
             return NetworkHelper.instance.TryToConnect(() =>
             {
-                if (!_character.IsNull() && !_countdownModule.IsNull())
+                if (!_character.IsNull() && !_countdownModule.IsNull() && !_refereeModule.IsNull())
                     return true;
                 _character = Race.GetLocalCharacter();
                 if (_character.IsNull())
                     return false;
                 _countdownModule = _character.GetModule<CountdownNetworkModule>();
+				_refereeModule = _character.GetModule<RefereeModule>();
                 return false;
             });
         }

@@ -94,6 +94,12 @@ namespace Mob
 		public const string EVENT_COUNTDOWN_ENDED = "countdown-ended";
 		public const string EVENT_COUNTDOWN_STOPPED = "countdown-stopped";
 		public const string EVENT_TURN_NUMBER_GETTING = "turn-number-getting";
+		public const string EVENT_REFEREE_SERVER_ENDTURNED = "referee-server-endturned";
+		public const string EVENT_REFEREE_CLIENT_ENDTURNED = "referee-client-endturned";
+		public const string EVENT_REFEREE_SERVER_PLAYED = "referee-server-played";
+		public const string EVENT_REFEREE_CLIENT_PLAYED = "referee-client-played";
+		public const string EVENT_REFEREE_SERVER_JOINT = "referee-server-joint";
+		public const string EVENT_REFEREE_CLIENT_JOINT = "referee-client-joint";
 	}
 }
 

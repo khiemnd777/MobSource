@@ -87,12 +87,12 @@ namespace Mob
 		public void Stop(){
 			StopAllCoroutines ();
 			_stop = true;
+			RpcStopCallback();
 		}
 
 		[Command]
 		public void CmdStop(){
 			Stop();
-			RpcStopCallback();
 		}
 
 		[ClientRpc]
@@ -101,4 +101,3 @@ namespace Mob
 		}
 	}
 }
-
