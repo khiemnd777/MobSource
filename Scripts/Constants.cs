@@ -90,6 +90,10 @@ namespace Mob
 		public const string EVENT_STAT_LUCK_DICE_CHANGED = "stat-luck-dice-changed";
 		public const string EVENT_STAT_LUCK_REWARD_CHANGED = "stat-luck-reward-changed";
 		public const string EVENT_STAT_AUTO_POINT_ADDED = "stat-auto-point-added";
+		public const string EVENT_COUNTDOWN_CALLBACK = "countdown-callback-fired";
+		public const string EVENT_COUNTDOWN_ENDED = "countdown-ended";
+		public const string EVENT_COUNTDOWN_STOPPED = "countdown-stopped";
+		public const string EVENT_TURN_NUMBER_GETTING = "turn-number-getting";
 	}
 }
 

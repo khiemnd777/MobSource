@@ -92,6 +92,8 @@ namespace Mob
 							var name = parameter.Name;
 							// Get the value from obj
 							var property = type.GetProperty(name);
+							if(property == null)
+                                continue;
 							var value = property.GetValue(args, null);
 							__a[index] = value;
 						}

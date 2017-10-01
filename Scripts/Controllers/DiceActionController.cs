@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Mob
 {
-    public class DiceActionController : MonoBehaviour
+    public class DiceActionController : MobBehaviour
     {
         public Text goldTxt;
         public Text energyTxt;
@@ -24,7 +24,6 @@ namespace Mob
             {
                 if (!TryToConnect())
                     return;
-
                 _goldModule.CmdRollDice();
                 _energyModule.CmdRollDice();
             });

@@ -77,6 +77,16 @@ namespace Mob
 			_isTurn = allow;
 		}
 
+		[Command]
+		public void CmdGetTurnNumber(){
+			RpcGetTurnNumberCallback(this.turnNumber);
+		}
+
+		[ClientRpc]
+		void RpcGetTurnNumberCallback(int turnNumber){
+			EventManager.TriggerEvent(Constants.EVENT_TURN_NUMBER_GETTING, new {turnNumber = turnNumber, ownNetId = netId.Value});
+		}
+
 		#region Gain point functions
 
 		// Gain point
