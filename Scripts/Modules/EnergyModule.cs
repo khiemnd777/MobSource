@@ -41,11 +41,11 @@ namespace Mob
         public void CmdRollDice()
         {
 			RollDice();
-			RpcRollDiceCallback();
+			RpcRollDiceCallback(dice);
         }
 
 		[ClientRpc]
-		void RpcRollDiceCallback(){
+		void RpcRollDiceCallback(int dice){
 			EventManager.TriggerEvent(Constants.EVENT_ENERGY_DICE_ROLLED, new { dice = dice, ownNetId = _race.netId.Value });
 		}
 
