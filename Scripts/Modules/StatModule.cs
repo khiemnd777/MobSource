@@ -35,7 +35,7 @@ namespace Mob
 		public int addedStrength;
 
 		void OnStrengthChanged(float currentStrength){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_STRENGTH_CHANGED, new { strength = currentStrength, ownNetId = _race.netId.Value });
+			EventManager.TriggerEvent (Constants.EVENT_STAT_STRENGTH_CHANGED, new { strength = currentStrength, oldValue = strength, ownNetId = _race.netId.Value });
 		}
 
 		[Header("Sub-strength")]
@@ -43,7 +43,7 @@ namespace Mob
 		public float physicalAttack;
 
 		void OnPhysicalAttackChanged (float currentPhysicalAttack){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_PHYSICAL_ATTACK_CHANGED, new {physicalAttack = currentPhysicalAttack, ownNetId = _race.netId.Value});
+			EventManager.TriggerEvent (Constants.EVENT_STAT_PHYSICAL_ATTACK_CHANGED, new {physicalAttack = currentPhysicalAttack, oldValue = physicalAttack, ownNetId = _race.netId.Value});
 		}
 
 		public float extraPhysicalAttack;
@@ -53,7 +53,7 @@ namespace Mob
 		public float physicalDefend;
 
 		void OnPhysicalDefendChanged(float currentPhysicalDefend){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_PHYSICAL_DEFEND_CHANGED, new { physicalDefend = currentPhysicalDefend, ownNetId = _race.netId.Value });
+			EventManager.TriggerEvent (Constants.EVENT_STAT_PHYSICAL_DEFEND_CHANGED, new { physicalDefend = currentPhysicalDefend, oldValue = physicalDefend, ownNetId = _race.netId.Value });
 		}
 
 		public float extraPhysicalDefend;
@@ -65,7 +65,7 @@ namespace Mob
 		public int addedDexterity;
 
 		void OnDexterityChanged(float currentDexterity){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_DEXTERITY_CHANGED, new {dexterity = currentDexterity, ownNetId = _race.netId.Value });
+			EventManager.TriggerEvent (Constants.EVENT_STAT_DEXTERITY_CHANGED, new {dexterity = currentDexterity, oldValue = dexterity, ownNetId = _race.netId.Value });
 		}
 
 		[Header("Sub-dexterity")]
@@ -73,7 +73,7 @@ namespace Mob
 		public float attackRating;
 
 		void OnAttackRatingChanged(float currentAttackRating){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_ATTACK_RATING_CHANGED, new {attackRating = currentAttackRating, ownNetId = _race.netId.Value });
+			EventManager.TriggerEvent (Constants.EVENT_STAT_ATTACK_RATING_CHANGED, new {attackRating = currentAttackRating, oldValue = attackRating, ownNetId = _race.netId.Value });
 		}
 
 		public float extraAttackRating;
@@ -83,7 +83,7 @@ namespace Mob
 		public float criticalRating;
 
 		void OnCriticalRatingChanged(float currentCriticalRating){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_CRITICAL_RATING_CHANGED, new {criticalRating = currentCriticalRating, ownNetId = _race.netId.Value });	
+			EventManager.TriggerEvent (Constants.EVENT_STAT_CRITICAL_RATING_CHANGED, new {criticalRating = currentCriticalRating, oldValue = criticalRating, ownNetId = _race.netId.Value });	
 		}
 
 		public float extraCriticalRating;
@@ -95,7 +95,7 @@ namespace Mob
 		public int addedIntelligent;
 
 		void OnIntelligentChanged(float currentIntelligent){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_INTELLIGENT_CHANGED, new { intelligent = currentIntelligent, ownNetId = _race.netId.Value });
+			EventManager.TriggerEvent (Constants.EVENT_STAT_INTELLIGENT_CHANGED, new { intelligent = currentIntelligent, oldValue = intelligent, ownNetId = _race.netId.Value });
 		}
 
 		[Header("Sub-intelligent")]
@@ -103,7 +103,7 @@ namespace Mob
 		public float magicAttack;
 
 		void OnMagicAttackChanged(float currentMagicAttack){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_MAGIC_ATTACK_CHANGED, new { magicAttack = currentMagicAttack, ownNetId = _race.netId.Value });
+			EventManager.TriggerEvent (Constants.EVENT_STAT_MAGIC_ATTACK_CHANGED, new { magicAttack = currentMagicAttack, oldValue = magicAttack, ownNetId = _race.netId.Value });
 		}
 
 		public float extraMagicAttack;
@@ -113,7 +113,7 @@ namespace Mob
 		public float magicResist;
 
 		void OnMagicResistChanged(float currentMagicResist){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_MAGIC_RESIST_CHANGED, new { magicResist = currentMagicResist, ownNetId = _race.netId.Value });
+			EventManager.TriggerEvent (Constants.EVENT_STAT_MAGIC_RESIST_CHANGED, new { magicResist = currentMagicResist, oldValue = magicResist, ownNetId = _race.netId.Value });
 		}
 
 		public float extraMagicResist;
@@ -125,7 +125,7 @@ namespace Mob
 		public int addedVitality;
 
 		void OnVitalityChanged(float currentVitality){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_VITALITY_CHANGED, new { vitality = currentVitality, ownNetId = _race.netId.Value });	
+			EventManager.TriggerEvent (Constants.EVENT_STAT_VITALITY_CHANGED, new { vitality = currentVitality, oldValue = vitality, ownNetId = _race.netId.Value });	
 		}
 
 		[Header("Sub-vitality")]
@@ -133,7 +133,7 @@ namespace Mob
 		public float maxHp;
 
 		void OnMaxHpChanged(float currentMaxHp){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_MAX_HP_CHANGED, new { maxHp = currentMaxHp, ownNetId = _race.netId.Value });
+			EventManager.TriggerEvent (Constants.EVENT_STAT_MAX_HP_CHANGED, new { maxHp = currentMaxHp, oldValue = maxHp, ownNetId = _race.netId.Value });
 		}
 
 		public float extraMaxHp;
@@ -143,7 +143,7 @@ namespace Mob
 		public float regenerateHp;
 
 		void OnRegenerateHpChanged(float currentRegenerateHp){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_REGENERATE_HP_CHANGED, new {regenerateHp = currentRegenerateHp, ownNetId = _race.netId.Value });
+			EventManager.TriggerEvent (Constants.EVENT_STAT_REGENERATE_HP_CHANGED, new {regenerateHp = currentRegenerateHp, oldValue = regenerateHp, ownNetId = _race.netId.Value });
 		}
 
 		public float extraRegenerateHp;
@@ -155,7 +155,7 @@ namespace Mob
 		public int addedLuck;
 
 		void OnLuckChanged(float currentLuck){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_LUCK_CHANGED, new { luck = currentLuck, ownNetId = _race.netId.Value });
+			EventManager.TriggerEvent (Constants.EVENT_STAT_LUCK_CHANGED, new { luck = currentLuck, oldValue = luck, ownNetId = _race.netId.Value });
 		}
 
 		[Header("Sub-luck")]
@@ -163,7 +163,7 @@ namespace Mob
 		public float luckDice;
 
 		void OnLuckDiceChanged(float currentLuckDice){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_LUCK_DICE_CHANGED, new { luckDice = currentLuckDice, ownNetId = _race.netId.Value });
+			EventManager.TriggerEvent (Constants.EVENT_STAT_LUCK_DICE_CHANGED, new { luckDice = currentLuckDice, oldValue = luckDice, ownNetId = _race.netId.Value });
 		}
 
 		public float extraLuckDice;
@@ -173,7 +173,7 @@ namespace Mob
 		public float luckReward;
 
 		void OnLuckRewardChanged(float currentLuckReward){
-			EventManager.TriggerEvent (Constants.EVENT_STAT_LUCK_REWARD_CHANGED, new {luckReward = currentLuckReward, ownNetId = _race.netId.Value});
+			EventManager.TriggerEvent (Constants.EVENT_STAT_LUCK_REWARD_CHANGED, new {luckReward = currentLuckReward, oldValue = luckReward, ownNetId = _race.netId.Value});
 		}
 
 		public float extraLuckReward;

@@ -24,6 +24,10 @@ namespace Mob
 		StatModule _statModule;
 
 		void Start(){
+			statValue.text = "0";
+			statValue1.text = "0";
+			statValue2.text = "0";
+
 			addBtn.onClick.AddListener (() => {
 				_statModule.CmdAddPoint(statType);
 			});
@@ -36,167 +40,167 @@ namespace Mob
 				addBtn.interactable = point > 0;
 			}));
 
-			EventManager.StartListening(Constants.EVENT_STAT_STRENGTH_CHANGED, new Action<float, uint>((strength, ownNetId) => {
+			EventManager.StartListening(Constants.EVENT_STAT_STRENGTH_CHANGED, new Action<float, float, uint>((strength, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Strength){
-					var value = strength - _statModule.strength;
+					var value = strength - oldValue;
 					PrepareItem ("Strength", strength, value);
 				}
 			}));
 
-			EventManager.StartListening (Constants.EVENT_STAT_PHYSICAL_ATTACK_CHANGED, new Action<float, uint>((physicalAttack, ownNetId) => {
+			EventManager.StartListening (Constants.EVENT_STAT_PHYSICAL_ATTACK_CHANGED, new Action<float, float, uint>((physicalAttack, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Strength){
-					var value = physicalAttack - _statModule.physicalAttack;
+					var value = physicalAttack - oldValue;
 					PrepareItem1 ("Physical attack", physicalAttack, value);
 				}
 			}));
 
-			EventManager.StartListening (Constants.EVENT_STAT_PHYSICAL_DEFEND_CHANGED, new Action<float, uint>((physicalDefend, ownNetId) => {
+			EventManager.StartListening (Constants.EVENT_STAT_PHYSICAL_DEFEND_CHANGED, new Action<float, float, uint>((physicalDefend, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Strength){
-					var value = physicalDefend - _statModule.physicalDefend;
+					var value = physicalDefend - oldValue;
 					PrepareItem2 ("Physical defend", physicalDefend, value);
 				}
 			}));
 
-			EventManager.StartListening(Constants.EVENT_STAT_DEXTERITY_CHANGED, new Action<float, uint>((dexterity, ownNetId) => {
+			EventManager.StartListening(Constants.EVENT_STAT_DEXTERITY_CHANGED, new Action<float, float, uint>((dexterity, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Dexterity){
-					var value = dexterity - _statModule.dexterity;
+					var value = dexterity - oldValue;
 					PrepareItem ("Dexterity", dexterity, value);
 				}
 			}));
 
-			EventManager.StartListening (Constants.EVENT_STAT_ATTACK_RATING_CHANGED, new Action<float, uint>((attackRating, ownNetId) => {
+			EventManager.StartListening (Constants.EVENT_STAT_ATTACK_RATING_CHANGED, new Action<float, float, uint>((attackRating, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Dexterity){
-					var value = attackRating - _statModule.attackRating;
+					var value = attackRating - oldValue;
 					PrepareItem1 ("Attack rating", attackRating, value);
 				}
 			}));
 
-			EventManager.StartListening (Constants.EVENT_STAT_CRITICAL_RATING_CHANGED, new Action<float, uint>((criticalRating, ownNetId) => {
+			EventManager.StartListening (Constants.EVENT_STAT_CRITICAL_RATING_CHANGED, new Action<float, float, uint>((criticalRating, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Dexterity){
-					var value = criticalRating - _statModule.criticalRating;
+					var value = criticalRating - oldValue;
 					PrepareItem2 ("Critical rating", criticalRating, value);
 				}
 			}));
 
-			EventManager.StartListening(Constants.EVENT_STAT_INTELLIGENT_CHANGED, new Action<float, uint>((intelligent, ownNetId) => {
+			EventManager.StartListening(Constants.EVENT_STAT_INTELLIGENT_CHANGED, new Action<float, float, uint>((intelligent, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Intelligent){
-					var value = intelligent - _statModule.intelligent;
+					var value = intelligent - oldValue;
 					PrepareItem ("Intelligent", intelligent, value);
 				}
 			}));
 
-			EventManager.StartListening (Constants.EVENT_STAT_MAGIC_ATTACK_CHANGED, new Action<float, uint>((magicAttack, ownNetId) => {
+			EventManager.StartListening (Constants.EVENT_STAT_MAGIC_ATTACK_CHANGED, new Action<float, float, uint>((magicAttack, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Intelligent){
-					var value = magicAttack - _statModule.magicAttack;
+					var value = magicAttack - oldValue;
 					PrepareItem1 ("Magic attack", magicAttack, value);
 				}
 			}));
 
-			EventManager.StartListening (Constants.EVENT_STAT_MAGIC_RESIST_CHANGED, new Action<float, uint>((magicResist, ownNetId) => {
+			EventManager.StartListening (Constants.EVENT_STAT_MAGIC_RESIST_CHANGED, new Action<float, float, uint>((magicResist, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Intelligent){
-					var value = magicResist - _statModule.magicResist;
+					var value = magicResist - oldValue;
 					PrepareItem2 ("Magic resist", magicResist, value);
 				}
 			}));
 
-			EventManager.StartListening(Constants.EVENT_STAT_VITALITY_CHANGED, new Action<float, uint>((vitality, ownNetId) => {
+			EventManager.StartListening(Constants.EVENT_STAT_VITALITY_CHANGED, new Action<float, float, uint>((vitality, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Vitality){
-					var value = vitality - _statModule.vitality;
+					var value = vitality - oldValue;
 					PrepareItem ("Vitality", vitality, value);
 				}
 			}));
 
-			EventManager.StartListening (Constants.EVENT_STAT_MAX_HP_CHANGED, new Action<float, uint>((maxHp, ownNetId) => {
+			EventManager.StartListening (Constants.EVENT_STAT_MAX_HP_CHANGED, new Action<float, float, uint>((maxHp, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Vitality){
-					var value = maxHp - _statModule.maxHp;
+					var value = maxHp - oldValue;
 					PrepareItem1 ("Max Hp", maxHp, value);
 				}
 			}));
 
-			EventManager.StartListening (Constants.EVENT_STAT_REGENERATE_HP_CHANGED, new Action<float, uint>((regenerateHp, ownNetId) => {
+			EventManager.StartListening (Constants.EVENT_STAT_REGENERATE_HP_CHANGED, new Action<float, float, uint>((regenerateHp, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Vitality){
-					var value = regenerateHp - _statModule.regenerateHp;
+					var value = regenerateHp - oldValue;
 					PrepareItem2 ("Regenerate Hp", regenerateHp, value);
 				}
 			}));
 
-			EventManager.StartListening(Constants.EVENT_STAT_LUCK_CHANGED, new Action<float, uint>((luck, ownNetId) => {
+			EventManager.StartListening(Constants.EVENT_STAT_LUCK_CHANGED, new Action<float, float, uint>((luck, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Luck){
-					var value = luck - _statModule.luck;
+					var value = luck - oldValue;
 					PrepareItem ("Luck", luck, value);
 				}
 			}));
 
-			EventManager.StartListening (Constants.EVENT_STAT_LUCK_DICE_CHANGED, new Action<float, uint>((luckDice, ownNetId) => {
+			EventManager.StartListening (Constants.EVENT_STAT_LUCK_DICE_CHANGED, new Action<float, float, uint>((luckDice, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Luck){
-					var value = luckDice - _statModule.luckDice;
+					var value = luckDice - oldValue;
 					PrepareItem1 ("Luck dice", luckDice, value);
 				}
 			}));
 
-			EventManager.StartListening (Constants.EVENT_STAT_LUCK_REWARD_CHANGED, new Action<float, uint>((luckReward, ownNetId) => {
+			EventManager.StartListening (Constants.EVENT_STAT_LUCK_REWARD_CHANGED, new Action<float, float, uint>((luckReward, oldValue, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if(_character.netId.Value != ownNetId)
 					return;
 				if(statType == StatType.Luck){
-					var value = luckReward - _statModule.luckReward;
+					var value = luckReward - oldValue;
 					PrepareItem2 ("Luck reward", luckReward, value);
 				}
 			}));
@@ -259,21 +263,24 @@ namespace Mob
 
 		void PrepareItem(string name, float value, float deltaUp = 0){
 			statText.text = name + ":";
-			statValue.text = Mathf.Floor(value).ToString();
+			deltaUp = Mathf.Floor(value - float.Parse(statValue.text));
+			statValue.text = value.ToString();
 			if(Mathf.FloorToInt(deltaUp) > 0)
 				ShowSubLabel (Constants.INCREASE_LABEL, statValue.transform, deltaUp, deltaTime: ShowingSubLabelDeltaTime, deltaMoveUp: ShowingSubLabelDeltaMoveUp);
 		}
 
 		void PrepareItem1(string name, float value, float deltaUp = 0){
 			statText1.text = name + ":";
-			statValue1.text = Mathf.Floor(value).ToString();
+			deltaUp = Mathf.Floor(value - float.Parse(statValue1.text));
+			statValue1.text = value.ToString();
 			if(Mathf.FloorToInt(deltaUp) > 0)
 				ShowSubLabel (Constants.INCREASE_LABEL, statValue1.transform, deltaUp, deltaTime: ShowingSubLabelDeltaTime, deltaMoveUp: ShowingSubLabelDeltaMoveUp);
 		}
 
 		void PrepareItem2(string name, float value, float deltaUp = 0){
 			statText2.text = name + ":";
-			statValue2.text = Mathf.Floor(value).ToString();
+			deltaUp = Mathf.Floor(value - float.Parse(statValue2.text));
+			statValue2.text = value.ToString();
 			if(Mathf.FloorToInt(deltaUp) > 0)
 				ShowSubLabel (Constants.INCREASE_LABEL, statValue2.transform, deltaUp, deltaTime: ShowingSubLabelDeltaTime, deltaMoveUp: ShowingSubLabelDeltaMoveUp);
 		}
