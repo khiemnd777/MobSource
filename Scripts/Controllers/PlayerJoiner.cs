@@ -20,34 +20,35 @@ namespace Mob
             manager = (NetworkLobbyManager)NetworkManager.singleton;
 
             createBattleBtn.onClick.AddListener(()=>{
-                manager.StartMatchMaker();
-                manager.matchMaker.ListMatches(0, 20, "", true, 0, 0, OnMatchList);
+                // if(NetworkManager.singleton.matchInfo == null)
+                    NetworkManager.singleton.StartMatchMaker();
+                NetworkManager.singleton.matchMaker.ListMatches(0, 20, "", true, 0, 0, OnMatchList);
                 // StartCoroutine (joinOrCreate ());
             });
         }
-
+        
         public void OnMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
         {
-            Debug.Log("Done waiting");
-            if (manager.matchInfo == null) {
+            Debug.Log(matches.Count);
+            // if (NetworkManager.singleton.matchInfo == null) {
                 if (matches.Count == 0) {
                     Debug.Log("Create");
-                    manager.matchMaker.CreateMatch (manager.matchName, manager.matchSize, true, "", "", "", 0, 0, manager.OnMatchCreate);
+                    NetworkManager.singleton.matchMaker.CreateMatch (NetworkManager.singleton.matchName, NetworkManager.singleton.matchSize, true, "", "", "", 0, 0, OnMatchCreate);
                 } else {
                     Debug.Log ("Joining");
-                    manager.matchMaker.JoinMatch (matches[0].networkId, "", "", "", 0, 0, manager.OnMatchJoined);
+                    NetworkManager.singleton.matchMaker.JoinMatch (matches[0].networkId, "", "", "", 0, 0, OnMatchJoined);
                 }
-            }
+            // }
         }
 
         public void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
         {
-            manager.matchInfo = matchInfo;
+            NetworkManager.singleton.matchInfo = matchInfo;
         }
 
         public void OnMatchJoined(bool success, string extendedInfo, MatchInfo matchInfo)
         {
-            manager.matchInfo = matchInfo;
+            NetworkManager.singleton.matchInfo = matchInfo;
         }
     }
 }
