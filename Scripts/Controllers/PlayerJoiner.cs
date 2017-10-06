@@ -4,6 +4,7 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
 using UnityEngine.Networking.Types;
 using UnityEngine.SceneManagement;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -11,44 +12,60 @@ namespace Mob
 {
     public class PlayerJoiner : MobBehaviour
     {
-        NetworkLobbyManager manager;
+        NetworkManager manager;
         [SerializeField]
         Button createBattleBtn;
 
         void Start()
         {
-            manager = (NetworkLobbyManager)NetworkManager.singleton;
+            manager = NetworkManager.singleton;
 
             createBattleBtn.onClick.AddListener(()=>{
-                // if(NetworkManager.singleton.matchInfo == null)
-                    NetworkManager.singleton.StartMatchMaker();
-                NetworkManager.singleton.matchMaker.ListMatches(0, 20, "", true, 0, 0, OnMatchList);
-                // StartCoroutine (joinOrCreate ());
+                manager.StartMatchMaker();
+                manager.matchMaker.ListMatches(0, 20, "", true, 0, 0, OnMatchList);
             });
         }
         
         public void OnMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
         {
             Debug.Log(matches.Count);
-            // if (NetworkManager.singleton.matchInfo == null) {
-                if (matches.Count == 0) {
-                    Debug.Log("Create");
-                    NetworkManager.singleton.matchMaker.CreateMatch (NetworkManager.singleton.matchName, NetworkManager.singleton.matchSize, true, "", "", "", 0, 0, OnMatchCreate);
-                } else {
-                    Debug.Log ("Joining");
-                    NetworkManager.singleton.matchMaker.JoinMatch (matches[0].networkId, "", "", "", 0, 0, OnMatchJoined);
+            if (matches.Count == 0)
+            {
+                Debug.Log("Create");
+                var matchName = "match-" + Guid.NewGuid().ToString();
+                manager.matchMaker.CreateMatch(matchName, 2, true, "", "", "", 0, 0, OnMatchCreate);
+            }
+            else
+            {
+                Debug.Log("Joining");
+                if (matches[0].networkId.Equals(manager.matchInfo.networkId))
+                {
+                    Debug.Log("Could not be joined");
+                    return;
                 }
-            // }
+                manager.matchMaker.JoinMatch(matches[0].networkId, "", "", "", 0, 0, OnMatchJoined);
+            }
         }
 
         public void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
         {
-            NetworkManager.singleton.matchInfo = matchInfo;
+            if(!success){
+                return;
+            }
+            MatchInfo hostInfo = matchInfo;
+            // NetworkServer.Listen(hostInfo, 9000);
+            manager.StartHost(hostInfo);
+            manager.matchInfo = matchInfo;
         }
 
         public void OnMatchJoined(bool success, string extendedInfo, MatchInfo matchInfo)
         {
-            NetworkManager.singleton.matchInfo = matchInfo;
+            if(!success){
+                return;
+            }
+            MatchInfo hostInfo = matchInfo;
+            manager.StartClient(hostInfo);
+            manager.matchInfo = matchInfo;
         }
     }
 }
