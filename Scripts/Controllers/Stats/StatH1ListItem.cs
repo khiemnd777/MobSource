@@ -264,7 +264,7 @@ namespace Mob
 		void PrepareItem(string name, float value, float deltaUp = 0){
 			statText.text = name + ":";
 			deltaUp = Mathf.Floor(value - float.Parse(statValue.text));
-			statValue.text = value.ToString();
+			statValue.text = Mathf.FloorToInt(value).ToString();
 			if(Mathf.FloorToInt(deltaUp) > 0)
 				ShowSubLabel (Constants.INCREASE_LABEL, statValue.transform, deltaUp, deltaTime: ShowingSubLabelDeltaTime, deltaMoveUp: ShowingSubLabelDeltaMoveUp);
 		}
@@ -272,7 +272,7 @@ namespace Mob
 		void PrepareItem1(string name, float value, float deltaUp = 0){
 			statText1.text = name + ":";
 			deltaUp = Mathf.Floor(value - float.Parse(statValue1.text));
-			statValue1.text = value.ToString();
+			statValue1.text = Mathf.FloorToInt(value).ToString();
 			if(Mathf.FloorToInt(deltaUp) > 0)
 				ShowSubLabel (Constants.INCREASE_LABEL, statValue1.transform, deltaUp, deltaTime: ShowingSubLabelDeltaTime, deltaMoveUp: ShowingSubLabelDeltaMoveUp);
 		}
@@ -280,7 +280,7 @@ namespace Mob
 		void PrepareItem2(string name, float value, float deltaUp = 0){
 			statText2.text = name + ":";
 			deltaUp = Mathf.Floor(value - float.Parse(statValue2.text));
-			statValue2.text = value.ToString();
+			statValue2.text = Mathf.FloorToInt(value).ToString();
 			if(Mathf.FloorToInt(deltaUp) > 0)
 				ShowSubLabel (Constants.INCREASE_LABEL, statValue2.transform, deltaUp, deltaTime: ShowingSubLabelDeltaTime, deltaMoveUp: ShowingSubLabelDeltaMoveUp);
 		}

@@ -10,5 +10,10 @@ namespace Mob
 	public enum InStoreState{
 		Bought, Available
 	}
+
+	[Serializable]
+	public enum CharacterType {
+		Swordman, Mage
+	}
 }
 
