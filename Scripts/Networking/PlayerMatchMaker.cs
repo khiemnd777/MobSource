@@ -127,7 +127,7 @@ namespace Mob
                 _onMatchCreateCallback.Invoke(matchInfo);
             }
             MatchInfo hostInfo = matchInfo;
-            NetworkServer.Listen(hostInfo, 9000);
+            // NetworkServer.Listen(hostInfo, 9000);
             networkManager.StartHost(hostInfo);
             networkManager.matchInfo = matchInfo;
         }

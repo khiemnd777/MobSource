@@ -12,6 +12,7 @@ namespace Mob
         public CharacterType characterType;
 		[SerializeField]
 		Race[] prefabs;
+		Race character;
 
         void Start()
         {
@@ -38,7 +39,11 @@ namespace Mob
                 //name = Constants.OPPONENT_PLAYER;
             }
         }
-
+		public override bool OnCheckObserver(NetworkConnection conn)
+		{
+			SpawnWithClientAuthority(character, gameObject);
+			return true;
+		}
         // Todo: For the testing purpose, we should use the default character
         void InitCharacter()
         {
@@ -77,8 +82,7 @@ namespace Mob
 			var prefabObj = prefabs.SingleOrDefault(x => typeof(T).IsEqual(x.GetType()));
 			if(prefabObj.IsNull())
 				return;
-			var character = Race.Create<T>((T)prefabObj, predicate);
-			SpawnWithClientAuthority(character, gameObject);
+			character = Race.Create<T>((T)prefabObj, predicate);
 		}
 
         void SpawnWithClientAuthority(Race race, GameObject player)
