@@ -10,6 +10,13 @@ namespace Mob
 {
     public class PlayerMatchMaker
     {
+        static PlayerMatchMaker _instance;
+        public static PlayerMatchMaker instance{
+            get{
+                return _instance ?? (_instance = new PlayerMatchMaker());
+            }
+        }
+
         NetworkManager networkManager;
 
         public PlayerMatchMaker()
@@ -115,13 +122,13 @@ namespace Mob
                 return;
             }
             isMatchCreateCallbackWaiting = false;
-            MatchInfo hostInfo = matchInfo;
-            // NetworkServer.Listen(hostInfo, 9000);
-            // networkManager.StartHost(hostInfo);
             if(_onMatchCreateCallback != null)
             {
                 _onMatchCreateCallback.Invoke(matchInfo);
             }
+            MatchInfo hostInfo = matchInfo;
+            NetworkServer.Listen(hostInfo, 9000);
+            networkManager.StartHost(hostInfo);
             networkManager.matchInfo = matchInfo;
         }
 
@@ -133,11 +140,11 @@ namespace Mob
                 return;
             }
             isMatchJoinedCallbackWaiting = false;
-            // MatchInfo hostInfo = matchInfo;
-            // networkManager.StartClient(hostInfo);
             if(_onMatchJoinedCallback != null){
                 _onMatchJoinedCallback.Invoke(matchInfo);
             }
+            MatchInfo hostInfo = matchInfo;
+            networkManager.StartClient(hostInfo);
             networkManager.matchInfo = matchInfo;
         }
 

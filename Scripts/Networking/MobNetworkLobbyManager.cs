@@ -10,7 +10,8 @@ namespace Mob
     {
         public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer){
             var mobLobbyPlayer = lobbyPlayer.GetComponent<MobNetworkLobbyPlayer>();
-            
+            var battlePlayer = gamePlayer.GetComponent<BattlePlayer>();
+            battlePlayer.characterType = mobLobbyPlayer.characterType;
             return true;
         }
     }

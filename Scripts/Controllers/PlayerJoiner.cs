@@ -12,60 +12,20 @@ namespace Mob
 {
     public class PlayerJoiner : MobBehaviour
     {
-        NetworkManager manager;
+        PlayerMatchMaker matchMaker;
         [SerializeField]
         Button createBattleBtn;
 
         void Start()
         {
-            manager = NetworkManager.singleton;
+            matchMaker = PlayerMatchMaker.instance;
 
             createBattleBtn.onClick.AddListener(()=>{
-                manager.StartMatchMaker();
-                manager.matchMaker.ListMatches(0, 20, "", true, 0, 0, OnMatchList);
+                matchMaker.StartMatchMaker();
+                matchMaker.GetMatchList(0, 20, 0, 0, matches => {
+                    matchMaker.CreateOrJoinMatch(matches, 2, "", 0, 0);
+                });
             });
-        }
-        
-        public void OnMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
-        {
-            Debug.Log(matches.Count);
-            if (matches.Count == 0)
-            {
-                Debug.Log("Create");
-                var matchName = "match-" + Guid.NewGuid().ToString();
-                manager.matchMaker.CreateMatch(matchName, 2, true, "", "", "", 0, 0, OnMatchCreate);
-            }
-            else
-            {
-                Debug.Log("Joining");
-                if (matches[0].networkId.Equals(manager.matchInfo.networkId))
-                {
-                    Debug.Log("Could not be joined");
-                    return;
-                }
-                manager.matchMaker.JoinMatch(matches[0].networkId, "", "", "", 0, 0, OnMatchJoined);
-            }
-        }
-
-        public void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo)
-        {
-            if(!success){
-                return;
-            }
-            MatchInfo hostInfo = matchInfo;
-            // NetworkServer.Listen(hostInfo, 9000);
-            manager.StartHost(hostInfo);
-            manager.matchInfo = matchInfo;
-        }
-
-        public void OnMatchJoined(bool success, string extendedInfo, MatchInfo matchInfo)
-        {
-            if(!success){
-                return;
-            }
-            MatchInfo hostInfo = matchInfo;
-            manager.StartClient(hostInfo);
-            manager.matchInfo = matchInfo;
         }
     }
 }
