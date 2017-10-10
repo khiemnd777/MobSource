@@ -77,8 +77,8 @@ namespace Mob
         {
             if (isInit)
                 return;
-            goldTxt.text = Mathf.RoundToInt(_goldModule.syncGoldField[0].gold).ToString();
-            energyTxt.text = Mathf.RoundToInt(_energyModule.syncEnergyField[0].energy).ToString();
+            // goldTxt.text = Mathf.RoundToInt(_goldModule.syncGoldField[0].gold).ToString();
+            // energyTxt.text = Mathf.RoundToInt(_energyModule.syncEnergyField[0].energy).ToString();
             isInit = true;
         }
 

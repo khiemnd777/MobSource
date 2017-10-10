@@ -25,8 +25,13 @@ namespace Mob
 
 		public override void OnStartClient ()
 		{
-			var playerGo = ClientScene.FindLocalObject(new NetworkInstanceId(playerNetId));
-			var netIdentity = playerGo.GetComponent<NetworkIdentity> ();
+			// var playerGo = ClientScene.FindLocalObject(new NetworkInstanceId(playerNetId));
+			// var netIdentity = GetComponent<NetworkIdentity> ();
+			// tag = netIdentity.isLocalPlayer ? Constants.LOCAL_CHARACTER : Constants.OPPONENT_CHARACTER;
+		}
+
+		public override void OnStartLocalPlayer(){
+			var netIdentity = GetComponent<NetworkIdentity> ();
 			tag = netIdentity.isLocalPlayer ? Constants.LOCAL_CHARACTER : Constants.OPPONENT_CHARACTER;
 		}
 

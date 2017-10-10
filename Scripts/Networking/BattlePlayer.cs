@@ -16,11 +16,12 @@ namespace Mob
 
         void Start()
         {
+            Debug.Log("Start Battle player");
             InitPlayer();
             InitCharacter();
         }
 
-        void InitPlayer()
+        public void InitPlayer()
         {
             if (isServer)
             {
@@ -39,16 +40,12 @@ namespace Mob
                 //name = Constants.OPPONENT_PLAYER;
             }
         }
-		public override bool OnCheckObserver(NetworkConnection conn)
-		{
-			SpawnWithClientAuthority(character, gameObject);
-			return true;
-		}
+
         // Todo: For the testing purpose, we should use the default character
-        void InitCharacter()
+        public void InitCharacter()
         {
-            if (isServer)
-            {
+            // if (isServer)
+            // {
                 switch (characterType)
                 {
                     default:
@@ -74,7 +71,7 @@ namespace Mob
                     case CharacterType.Mage:
                         break;
                 }
-            }
+            // }
         }
 
 		void CreateCharacter<T>(Action<T> predicate) where T : Race
@@ -83,9 +80,24 @@ namespace Mob
 			if(prefabObj.IsNull())
 				return;
 			character = Race.Create<T>((T)prefabObj, predicate);
+            // SpawnWithClientAuthority();
 		}
 
-        void SpawnWithClientAuthority(Race race, GameObject player)
+        [Command]
+        public void CmdSpawnWithClientAuthority(){
+            Debug.Log("Spawning");
+            character.transform.SetParent(transform);
+            NetworkServer.SpawnWithClientAuthority(character.gameObject, gameObject);
+        }
+
+        public void SpawnWithClientAuthority(){
+            Debug.Log("Spawning");
+            character.transform.SetParent(transform);
+            NetworkServer.SpawnWithClientAuthority(character.gameObject, gameObject);
+            // NetworkServer.AddPlayerForConnection(connectionToClient, character.gameObject, 2);
+        }
+
+        public void SpawnWithClientAuthority(Race race, GameObject player)
         {
             race.transform.SetParent(transform);
             NetworkServer.SpawnWithClientAuthority(race.gameObject, player);

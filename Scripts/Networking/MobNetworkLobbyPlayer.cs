@@ -14,6 +14,7 @@ namespace Mob
         {
             readyToBegin = true;
             SendReadyToBeginMessage();
+            // base.OnClientEnterLobby();
         }
     }
 }
