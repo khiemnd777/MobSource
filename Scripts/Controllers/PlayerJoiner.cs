@@ -22,10 +22,10 @@ namespace Mob
 
             createBattleBtn.onClick.AddListener(()=>{
                 matchMaker.StartMatchMaker();
-                // matchMaker.GetMatchList(0, 20, 0, 0, matches => {
-                //     matchMaker.CreateOrJoinMatch(matches, 2, "", 0, 0);
-                // });
-                matchMaker.CreateMatch(2, "", 0, 0);
+                matchMaker.GetMatchList(0, 20, 0, 0, matches => {
+                    matchMaker.CreateOrJoinMatch(matches, 2, "", 0, 0);
+                });
+                // matchMaker.CreateMatch(2, "", 0, 0);
             });
         }
     }

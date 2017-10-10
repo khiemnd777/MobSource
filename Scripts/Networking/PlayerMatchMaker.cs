@@ -49,7 +49,7 @@ namespace Mob
             isMatchCreateCallbackWaiting = true;
             _onMatchCreateCallback = callback;
             var matchName = "match_" + Guid.NewGuid().ToString();
-            networkManager.matchMaker.CreateMatch(matchName, matchSize, true, matchPassword, "", "", eloScoreForMatch, requestDomain, OnMatchCreate);
+            networkManager.matchMaker.CreateMatch(matchName, matchSize, true, matchPassword, "", "", eloScoreForMatch, requestDomain, networkManager.OnMatchCreate);
         }
 
         Action<MatchInfo> _onMatchJoinedCallback;
@@ -60,7 +60,7 @@ namespace Mob
                 return;
             isMatchJoinedCallbackWaiting = true;
             _onMatchJoinedCallback = callback;
-            networkManager.matchMaker.JoinMatch(netId, matchPassword, "", "", eloScoreForClient, requestDomain, OnMatchJoined);
+            networkManager.matchMaker.JoinMatch(netId, matchPassword, "", "", eloScoreForClient, requestDomain, networkManager.OnMatchJoined);
         }
 
         public void CreateOrJoinMatch(List<MatchInfoSnapshot> matches, uint matchSize, string matchPassword, int eloScoreForMatch, int requestDomain, Action<MatchInfo> callback = null)
@@ -72,7 +72,7 @@ namespace Mob
             else
             {
                 var lastMatch = matches[matches.Count - 1];
-                if (lastMatch.networkId.Equals(networkManager.matchInfo.networkId))
+                if (networkManager.matchInfo != null && lastMatch.networkId.Equals(networkManager.matchInfo.networkId))
                 {
                     return;
                 }
@@ -126,10 +126,10 @@ namespace Mob
             {
                 _onMatchCreateCallback.Invoke(matchInfo);
             }
-            MatchInfo hostInfo = matchInfo;
-            // NetworkServer.Listen(hostInfo, 9000);
-            networkManager.StartHost(hostInfo);
             networkManager.matchInfo = matchInfo;
+            MatchInfo hostInfo = matchInfo;
+            // networkManager.StartHost(hostInfo);
+            networkManager.OnMatchCreate(success, extendedInfo, matchInfo);
         }
 
         void OnMatchJoined(bool success, string extendedInfo, MatchInfo matchInfo)
@@ -143,9 +143,10 @@ namespace Mob
             if(_onMatchJoinedCallback != null){
                 _onMatchJoinedCallback.Invoke(matchInfo);
             }
-            MatchInfo hostInfo = matchInfo;
-            networkManager.StartClient(hostInfo);
             networkManager.matchInfo = matchInfo;
+            MatchInfo hostInfo = matchInfo;
+            // networkManager.StartClient(hostInfo);
+            networkManager.OnMatchJoined(success, extendedInfo, matchInfo);
         }
 
         void OnMatchDestroy(bool success, string extendedInfo)

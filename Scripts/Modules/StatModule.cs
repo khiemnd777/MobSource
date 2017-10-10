@@ -388,11 +388,11 @@ namespace Mob
 			var vitalityP = addedVitality * totalP;
 			AutoCalculateProbability (strengthP, dexterityP, intelligentP, vitalityP, luckP);
 
-			RpcAutoAddPointCallback ();
+			TargetAutoAddPointCallback (connectionToClient);
 		}
 
-		[ClientRpc]
-		void RpcAutoAddPointCallback(){
+		[TargetRpc]
+		void TargetAutoAddPointCallback(NetworkConnection conn){
 			EventManager.TriggerEvent (Constants.EVENT_STAT_AUTO_POINT_ADDED, new { ownNetId = _race.netId.Value });
 		}
 

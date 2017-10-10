@@ -16,5 +16,10 @@ namespace Mob
             SendReadyToBeginMessage();
             // base.OnClientEnterLobby();
         }
+
+        [ClientRpc]
+        public void RpcUpdateCountdown(float timeCountDown){
+
+        }
     }
 }
