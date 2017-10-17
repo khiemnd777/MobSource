@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
 using UnityEngine.Networking.Types;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -17,16 +18,20 @@ namespace Mob
             }
         }
 
-        NetworkManager networkManager;
+        MobNetworkLobbyManager networkManager;
 
         public PlayerMatchMaker()
         {
-            networkManager = NetworkManager.singleton;
+            networkManager = (MobNetworkLobbyManager) NetworkManager.singleton;
         }
 
         public void StartMatchMaker()
         {
             networkManager.StartMatchMaker();
+        }
+
+        public void StopMatchMaker(){
+            networkManager.StopMatchMaker();
         }
 
         Action<List<MatchInfoSnapshot>> _onMatchListCallback;
@@ -49,7 +54,7 @@ namespace Mob
             isMatchCreateCallbackWaiting = true;
             _onMatchCreateCallback = callback;
             var matchName = "match_" + Guid.NewGuid().ToString();
-            networkManager.matchMaker.CreateMatch(matchName, matchSize, true, matchPassword, "", "", eloScoreForMatch, requestDomain, networkManager.OnMatchCreate);
+            networkManager.matchMaker.CreateMatch(matchName, matchSize, true, matchPassword, "", "", eloScoreForMatch, requestDomain, OnMatchCreate);
         }
 
         Action<MatchInfo> _onMatchJoinedCallback;
@@ -60,7 +65,7 @@ namespace Mob
                 return;
             isMatchJoinedCallbackWaiting = true;
             _onMatchJoinedCallback = callback;
-            networkManager.matchMaker.JoinMatch(netId, matchPassword, "", "", eloScoreForClient, requestDomain, networkManager.OnMatchJoined);
+            networkManager.matchMaker.JoinMatch(netId, matchPassword, "", "", eloScoreForClient, requestDomain, OnMatchJoined);
         }
 
         public void CreateOrJoinMatch(List<MatchInfoSnapshot> matches, uint matchSize, string matchPassword, int eloScoreForMatch, int requestDomain, Action<MatchInfo> callback = null)
@@ -90,6 +95,16 @@ namespace Mob
             networkManager.matchMaker.DestroyMatch(netId, requestDomain, OnMatchDestroy);
         }
 
+        public void Exit(){
+            if(networkManager.matchInfo != null){
+                networkManager.playerState = PlayerState.Exiting;
+                DestroyMatch(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, () => {
+                    StopMatchMaker();
+                    networkManager.playerState = PlayerState.Unknown;
+                });
+            }
+        }
+
         Action _onMatchDropConnectionCallback;
         bool isMatchDropConnectionCallbackWaiting;
         public void DropConnection(NetworkID netId, int requestDomain, Action callback){
@@ -108,9 +123,10 @@ namespace Mob
                 return;
             }
             isMatchListCallbackWaiting = false;
+            var wrappedMatches = matches.Where(x => x.currentSize > 0).ToList();
             if (_onMatchListCallback != null)
             {
-                _onMatchListCallback.Invoke(matches);
+                _onMatchListCallback.Invoke(wrappedMatches);
             }
         }
 
@@ -158,6 +174,8 @@ namespace Mob
             }
             isMatchDestroyCallbackWaiting = false;
             networkManager.matchInfo = null;
+            networkManager.StopHost();
+            networkManager.StopMatchMaker();
             if(_onMatchDestroyCallback != null){
                 _onMatchDestroyCallback.Invoke();
             }

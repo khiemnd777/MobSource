@@ -12,20 +12,52 @@ namespace Mob
 {
     public class PlayerJoiner : MobBehaviour
     {
-        PlayerMatchMaker matchMaker;
         [SerializeField]
         Button createBattleBtn;
+        [SerializeField]
+        Button exitBattleBtn;
+        [SerializeField]
+        Button swordmanSelectionBtn;
+        [SerializeField]
+        Button mageSelectionBtn;
+        [SerializeField]
+        Button berserkerSelectionBtn;
+        [SerializeField]
+        RectTransform connectionStatusPanel;
+
+        MobNetworkLobbyManager lobbyManager;
+        PlayerMatchMaker matchMaker;
 
         void Start()
         {
             matchMaker = PlayerMatchMaker.instance;
-
-            createBattleBtn.onClick.AddListener(()=>{
+            lobbyManager = (MobNetworkLobbyManager) NetworkManager.singleton;
+            connectionStatusPanel.gameObject.SetActive(false);
+            createBattleBtn.onClick.AddListener(() => {
                 matchMaker.StartMatchMaker();
                 matchMaker.GetMatchList(0, 20, 0, 0, matches => {
                     matchMaker.CreateOrJoinMatch(matches, 2, "", 0, 0);
                 });
-                // matchMaker.CreateMatch(2, "", 0, 0);
+            });
+
+            exitBattleBtn.onClick.AddListener(() => {
+                if(lobbyManager.matchInfo != null){
+                    matchMaker.DestroyMatch(lobbyManager.matchInfo.networkId, lobbyManager.matchInfo.domain, () => {
+                        matchMaker.StopMatchMaker();
+                    });
+                }
+            });
+
+            swordmanSelectionBtn.onClick.AddListener(() => {
+                lobbyManager.characterType = CharacterType.Swordman;
+            });
+
+            mageSelectionBtn.onClick.AddListener(() => {
+                lobbyManager.characterType = CharacterType.Mage;
+            });
+            
+            berserkerSelectionBtn.onClick.AddListener(() => {
+                lobbyManager.characterType = CharacterType.Berserker;
             });
         }
     }
