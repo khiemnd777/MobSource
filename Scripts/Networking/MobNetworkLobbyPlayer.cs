@@ -9,20 +9,17 @@ namespace Mob
     public class MobNetworkLobbyPlayer : NetworkLobbyPlayer
     {
         public CharacterType characterType;
-
+        
         public override void OnClientEnterLobby()
         {
             readyToBegin = true;
-        }
-
-        public override void OnStartLocalPlayer(){
-            if(this.isLocalPlayer)
-                SendReadyToBeginMessage();
+            SendReadyToBeginMessage();
+            // base.OnClientEnterLobby();
         }
 
         [ClientRpc]
         public void RpcUpdateCountdown(float timeCountDown){
-            Debug.Log(timeCountDown);
+
         }
     }
 }

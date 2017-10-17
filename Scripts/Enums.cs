@@ -13,11 +13,7 @@ namespace Mob
 
 	[Serializable]
 	public enum CharacterType {
-		Swordman, Mage, Berserker
-	}
-
-	public enum PlayerState{
-		Unknown, FindingAppropriateBattle, WaitingConnection, InBattle, Exiting
+		Swordman, Mage
 	}
 }
 
