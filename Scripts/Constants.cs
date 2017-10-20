@@ -100,6 +100,15 @@ namespace Mob
 		public const string EVENT_REFEREE_CLIENT_PLAYED = "referee-client-played";
 		public const string EVENT_REFEREE_SERVER_JOINT = "referee-server-joint";
 		public const string EVENT_REFEREE_CLIENT_JOINT = "referee-client-joint";
+
+		// Connection status
+		public const string EVENT_CONNECTION_STATUS_ON_START_HOST = "connection-status-on-start-host";
+		public const string EVENT_CONNECTION_STATUS_ON_LOBBY_SERVER_CREATE_LOBBY_PLAYER = "connection-status-on-lobby-server-create-lobby-player";
+		public const string EVENT_CONNECTION_STATUS_ON_DROP_CONNECTION = "connection-status-on-drop-connection";
+		public const string EVENT_CONNECTION_ON_CLIENT_DISCONNECT = "connection-status-on-client-disconnect";
+		public const string EVENT_CONNECTION_ON_CLIENT_ERROR = "connection-status-on-client-error";
+		public const string EVENT_CONNECTION_ON_LOBBY_STOP_HOST = "connection-status-on-lobby-stop-host";
+		public const string EVENT_CONNECTION_ON_PLAYER_HAS_ALREADY = "connection-status-on-player-has-already";
 	}
 }
 

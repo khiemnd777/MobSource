@@ -24,6 +24,7 @@ namespace Mob
 
         public override void OnStartHost(){
             Debug.Log("OnStartHost");
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_START_HOST);
             playerState = PlayerState.WaitingConnection;
             base.OnStartHost();
         }
@@ -90,6 +91,7 @@ namespace Mob
         public override GameObject OnLobbyServerCreateLobbyPlayer(NetworkConnection conn, short playerControllerId)
         {
             Debug.Log("OnLobbyServerCreateLobbyPlayer");
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_LOBBY_SERVER_CREATE_LOBBY_PLAYER);
             var lobbyGo = GameObject.Instantiate(lobbyPlayerPrefab, Vector3.zero, Quaternion.identity);
             var lobbyPlayer = lobbyGo.GetComponent<MobNetworkLobbyPlayer>();
             lobbyPlayer.characterType = characterType;
@@ -100,6 +102,7 @@ namespace Mob
 
         public override void OnDropConnection(bool success, string extendedInfo){
             Debug.Log("OnDropConnection");
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_DROP_CONNECTION);
             switch(playerState){
                 default:
                 case PlayerState.Unknown:
@@ -132,6 +135,7 @@ namespace Mob
     
         public override void OnClientDisconnect(NetworkConnection conn){
             Debug.Log("OnClientDisconnect");
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_ON_CLIENT_DISCONNECT);
             switch(playerState){
                 default:
                 case PlayerState.Unknown:
@@ -151,6 +155,7 @@ namespace Mob
 
         public override void OnClientError(NetworkConnection conn, int errorCode){
             Debug.Log("OnClientError");
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_ON_CLIENT_ERROR);
             playerState = PlayerState.Unknown;
             base.OnClientError(conn, errorCode);
         }
@@ -162,6 +167,7 @@ namespace Mob
 
         public override void OnLobbyStopHost(){
             Debug.Log("OnLobbyStopHost");
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_ON_LOBBY_STOP_HOST);
             playerState = PlayerState.Unknown;
             base.OnLobbyStopHost();
         }
@@ -212,6 +218,14 @@ namespace Mob
             var allready = lobbySlots.Count(x => !x.IsNull() && x.readyToBegin) == maxPlayers;
             if (allready){
                 playerState = PlayerState.InBattle;
+                for (int i = 0; i < lobbySlots.Length; ++i)
+                {
+                    if (lobbySlots[i] != null)
+                    {
+                        var lobbyPlayer = (MobNetworkLobbyPlayer) lobbySlots[i];
+                        lobbyPlayer.TargetPlayerHasAlready(lobbyPlayer.connectionToClient);
+                    }
+                }
                 StartCoroutine(ServerCountdownCoroutine());
             }
         }
@@ -242,24 +256,17 @@ namespace Mob
                 int newFloorTime = Mathf.FloorToInt(remainingTime);
 
                 if (newFloorTime != floorTime)
-                {//to avoid flooding the network of message, we only send a notice to client when the number of plain seconds change.
+                {
                     floorTime = newFloorTime;
 
                     for (int i = 0; i < lobbySlots.Length; ++i)
                     {
                         if (lobbySlots[i] != null)
-                        {//there is maxPlayer slots, so some could be == null, need to test it before accessing!
-                            (lobbySlots[i] as MobNetworkLobbyPlayer).RpcUpdateCountdown(floorTime);
+                        {
+                            var lobbyPlayer = (MobNetworkLobbyPlayer) lobbySlots[i];
+                            lobbyPlayer.TargetUpdateCountdown(lobbyPlayer.connectionToClient, floorTime);
                         }
                     }
-                }
-            }
-
-            for (int i = 0; i < lobbySlots.Length; ++i)
-            {
-                if (lobbySlots[i] != null)
-                {
-                    (lobbySlots[i] as MobNetworkLobbyPlayer).RpcUpdateCountdown(0);
                 }
             }
             ServerChangeScene(playScene);

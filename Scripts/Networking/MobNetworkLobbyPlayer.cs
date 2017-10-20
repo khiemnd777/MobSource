@@ -24,5 +24,16 @@ namespace Mob
         public void RpcUpdateCountdown(float timeCountDown){
             Debug.Log(timeCountDown);
         }
+
+        [TargetRpc]
+        public void TargetUpdateCountdown(NetworkConnection connection, int timeCountDown){
+            Debug.Log(timeCountDown);
+        }
+
+        [TargetRpc]
+        public void TargetPlayerHasAlready(NetworkConnection connection){
+            Debug.Log("Player has already to start");
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_ON_PLAYER_HAS_ALREADY);
+        }
     }
 }
