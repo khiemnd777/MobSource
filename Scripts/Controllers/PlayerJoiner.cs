@@ -22,8 +22,6 @@ namespace Mob
         Button mageSelectionBtn;
         [SerializeField]
         Button berserkerSelectionBtn;
-        [SerializeField]
-        RectTransform connectionStatusPanel;
 
         MobNetworkLobbyManager lobbyManager;
         PlayerMatchMaker matchMaker;
@@ -32,7 +30,6 @@ namespace Mob
         {
             matchMaker = PlayerMatchMaker.instance;
             lobbyManager = (MobNetworkLobbyManager) NetworkManager.singleton;
-            connectionStatusPanel.gameObject.SetActive(false);
             createBattleBtn.onClick.AddListener(() => {
                 matchMaker.StartMatchMaker();
                 matchMaker.GetMatchList(0, 20, 0, 0, matches => {
