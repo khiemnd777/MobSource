@@ -15,8 +15,6 @@ namespace Mob
         [SerializeField]
         Button createBattleBtn;
         [SerializeField]
-        Button exitBattleBtn;
-        [SerializeField]
         Button swordmanSelectionBtn;
         [SerializeField]
         Button mageSelectionBtn;
@@ -31,18 +29,11 @@ namespace Mob
             matchMaker = PlayerMatchMaker.instance;
             lobbyManager = (MobNetworkLobbyManager) NetworkManager.singleton;
             createBattleBtn.onClick.AddListener(() => {
+                EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_STARTING_A_CONNECTION);
                 matchMaker.StartMatchMaker();
                 matchMaker.GetMatchList(0, 20, 0, 0, matches => {
                     matchMaker.CreateOrJoinMatch(matches, 2, "", 0, 0);
                 });
-            });
-
-            exitBattleBtn.onClick.AddListener(() => {
-                if(lobbyManager.matchInfo != null){
-                    matchMaker.DestroyMatch(lobbyManager.matchInfo.networkId, lobbyManager.matchInfo.domain, () => {
-                        matchMaker.StopMatchMaker();
-                    });
-                }
             });
 
             swordmanSelectionBtn.onClick.AddListener(() => {

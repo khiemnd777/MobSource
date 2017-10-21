@@ -87,32 +87,46 @@ namespace Mob
 
         Action _onMatchDestroyCallback;
         bool isMatchDestroyCallbackWaiting;
-        public void DestroyMatch(NetworkID netId, int requestDomain, Action callback) {
+        public void DestroyMatch(NetworkID netId, int requestDomain, Action callback = null) {
             if(isMatchDestroyCallbackWaiting)
                 return;
             isMatchDestroyCallbackWaiting = true;
             _onMatchDestroyCallback = callback;
+            // networkManager.StopHost();
             networkManager.matchMaker.DestroyMatch(netId, requestDomain, OnMatchDestroy);
         }
 
-        public void Exit(){
-            if(networkManager.matchInfo != null){
-                networkManager.playerState = PlayerState.Exiting;
-                DestroyMatch(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, () => {
-                    StopMatchMaker();
-                    networkManager.playerState = PlayerState.Unknown;
-                });
-            }
+        public void Exit(Action actionExit = null){
+            networkManager.playerState = PlayerState.Exiting;
+            GetMatchList(0, 20, 0, 0, matches => {
+                if(networkManager.matchInfo != null) {
+                    if(matches.Count > 0){
+                        var lastMatch = matches[matches.Count - 1];
+                        if(lastMatch.networkId == networkManager.matchInfo.networkId){
+                            DestroyMatch(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
+                        } else {
+                            DropConnection(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
+                        }
+                    }else{
+                        DropConnection(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
+                    }
+                }
+                networkManager.playerState = PlayerState.Unknown;
+            });
         }
 
         Action _onMatchDropConnectionCallback;
         bool isMatchDropConnectionCallbackWaiting;
-        public void DropConnection(NetworkID netId, int requestDomain, Action callback){
+        public void DropConnection(NetworkID netId, int requestDomain, Action callback =  null){
             if(isMatchDropConnectionCallbackWaiting)
                 return;
             isMatchDropConnectionCallbackWaiting = true;
             _onMatchDropConnectionCallback = callback;
-            networkManager.matchMaker.DropConnection(netId, NodeID.Invalid, requestDomain, OnMatchDropConnection);
+            networkManager.StopClient();
+            if(callback != null){
+                callback.Invoke();
+            }
+            // networkManager.matchMaker.DropConnection(netId, NodeID.Invalid, requestDomain, OnMatchDropConnection);
         }
 
         void OnMatchList(bool success, string extendedInfo, List<MatchInfoSnapshot> matches)
@@ -160,7 +174,7 @@ namespace Mob
                 _onMatchJoinedCallback.Invoke(matchInfo);
             }
             networkManager.matchInfo = matchInfo;
-            MatchInfo hostInfo = matchInfo;
+            // MatchInfo hostInfo = matchInfo;
             // networkManager.StartClient(hostInfo);
             networkManager.OnMatchJoined(success, extendedInfo, matchInfo);
         }
@@ -173,9 +187,10 @@ namespace Mob
                 return;
             }
             isMatchDestroyCallbackWaiting = false;
-            networkManager.matchInfo = null;
+            networkManager.OnDestroyMatch(success, extendedInfo);
             networkManager.StopHost();
-            networkManager.StopMatchMaker();
+            networkManager.StopClient();
+            networkManager.matchInfo = null;
             if(_onMatchDestroyCallback != null){
                 _onMatchDestroyCallback.Invoke();
             }

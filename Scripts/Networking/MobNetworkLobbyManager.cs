@@ -50,12 +50,13 @@ namespace Mob
         //     base.OnLobbyServerConnect(conn);
         // }
 
-        // public override void OnStartClient(NetworkClient lobbyClient)
-        // {
-        //     Debug.Log("OnStartClient");
-        //     playerState = PlayerState.FindingAppropriateBattle;
-        //     base.OnStartClient(lobbyClient);
-        // }
+        public override void OnStartClient(NetworkClient lobbyClient)
+        {
+            Debug.Log("OnStartClient");
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_CLIENT_CONNECT);
+            playerState = PlayerState.WaitingConnection;
+            base.OnStartClient(lobbyClient);
+        }
 
         // public override void OnLobbyStartClient(NetworkClient lobbyClient){
         //     Debug.Log("OnLobbyStartClient");
@@ -102,13 +103,14 @@ namespace Mob
 
         public override void OnDropConnection(bool success, string extendedInfo){
             Debug.Log("OnDropConnection");
-            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_DROP_CONNECTION);
             switch(playerState){
-                default:
                 case PlayerState.Unknown:
                 case PlayerState.Exiting:
                 case PlayerState.InBattle:
+                    EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_DROP_CONNECTION);
                     base.OnDropConnection(success, extendedInfo);
+                break;
+                default:
                 break;
             }
         }
@@ -135,12 +137,11 @@ namespace Mob
     
         public override void OnClientDisconnect(NetworkConnection conn){
             Debug.Log("OnClientDisconnect");
-            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_ON_CLIENT_DISCONNECT);
             switch(playerState){
-                default:
                 case PlayerState.Unknown:
                 case PlayerState.Exiting:
                 case PlayerState.InBattle:
+                    EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_CLIENT_DISCONNECT);
                     base.OnClientDisconnect(conn);
                 break;
                 case PlayerState.WaitingConnection:
@@ -150,12 +151,14 @@ namespace Mob
                         PlayerMatchMaker.instance.CreateOrJoinMatch(matches, 2, "", 0, 0);
                     });
                 break;
+                default:
+                break;
             }
         }
 
         public override void OnClientError(NetworkConnection conn, int errorCode){
             Debug.Log("OnClientError");
-            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_ON_CLIENT_ERROR);
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_CLIENT_ERROR);
             playerState = PlayerState.Unknown;
             base.OnClientError(conn, errorCode);
         }
@@ -167,7 +170,7 @@ namespace Mob
 
         public override void OnLobbyStopHost(){
             Debug.Log("OnLobbyStopHost");
-            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_ON_LOBBY_STOP_HOST);
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_LOBBY_STOP_HOST);
             playerState = PlayerState.Unknown;
             base.OnLobbyStopHost();
         }
