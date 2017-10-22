@@ -53,6 +53,7 @@ namespace Mob
             EventManager.StartListening(Constants.EVENT_CONNECTION_STATUS_ON_PLAYER_COUNTDOWN, new Action<int>(countdown => {
                 connectionStatusTxt.text = string.Format("The battle is going to start in {0}", (countdown + 1));
                 if(countdown < 0){
+                    exitConnectionBtn.interactable = true;
                     VisiblePanel(false);
                 }
             }));
@@ -67,6 +68,10 @@ namespace Mob
 
             EventManager.StartListening(Constants.EVENT_CONNECTION_STATUS_ON_DROP_CONNECTION, new Action(() => {
                 connectionStatusTxt.text = "The connection has occured an error\nPlease to exit and try to connect again";
+            }));
+
+            EventManager.StartListening(Constants.EVENT_CONNECTION_STATUS_ON_PLAYER_HAS_ALREADY, new Action(() => {
+                exitConnectionBtn.interactable = false;
             }));
         }
 

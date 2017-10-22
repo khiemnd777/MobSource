@@ -20,7 +20,7 @@ namespace Mob
 						var xMoved = initTouch.position.x - t.position.x;
 						var yMoved = initTouch.position.y - t.position.y;
 						var distance = Mathf.Sqrt (xMoved * xMoved + yMoved * yMoved);
-						var isHorizontalSwiping = Mathf.Abs (xMoved) > Mathf.Abs (yMoved);
+						// var isHorizontalSwiping = Mathf.Abs (xMoved) > Mathf.Abs (yMoved);
 						Debug.Log (distance);
 						if (distance > 50f) {
 							

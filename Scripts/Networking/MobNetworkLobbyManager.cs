@@ -141,7 +141,7 @@ namespace Mob
             switch(playerState){
                 case PlayerState.InBattle:
                     playerState = PlayerState.Unknown;
-                    StopClient();
+                    PlayerMatchMaker.instance.Exit();
                     break;
                 default:
                     base.OnServerDisconnect(conn);
@@ -171,6 +171,7 @@ namespace Mob
                     });
                 break;
                 default:
+                    base.OnClientDisconnect(conn);
                 break;
             }
         }
@@ -259,6 +260,7 @@ namespace Mob
 
         public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo){
             StartCoroutine(MobUtility.WaitInWhile(7f, () => {
+                Debug.Log("OnMatchCreateInWhile");
                 return matchMaker == null || !lobbySlots.Any(x => x.IsNull());
             }, () => {
                 PlayerMatchMaker.instance.DestroyMatch(matchInfo.networkId, matchInfo.domain, () => {

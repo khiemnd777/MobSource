@@ -12,8 +12,10 @@ namespace Mob
     public class PlayerMatchMaker
     {
         static PlayerMatchMaker _instance;
-        public static PlayerMatchMaker instance{
-            get{
+        public static PlayerMatchMaker instance
+        {
+            get
+            {
                 return _instance ?? (_instance = new PlayerMatchMaker());
             }
         }
@@ -22,7 +24,7 @@ namespace Mob
 
         public PlayerMatchMaker()
         {
-            networkManager = (MobNetworkLobbyManager) NetworkManager.singleton;
+            networkManager = (MobNetworkLobbyManager)NetworkManager.singleton;
         }
 
         public void StartMatchMaker()
@@ -30,7 +32,8 @@ namespace Mob
             networkManager.StartMatchMaker();
         }
 
-        public void StopMatchMaker(){
+        public void StopMatchMaker()
+        {
             networkManager.StopMatchMaker();
         }
 
@@ -42,7 +45,7 @@ namespace Mob
                 return;
             isMatchListCallbackWaiting = true;
             _onMatchListCallback = callback;
-            if(networkManager.matchMaker == null) return;
+            if (networkManager.matchMaker == null) return;
             networkManager.matchMaker.ListMatches(startPageNumber, resultPageSize, "", true, eloScoreTarget, requestDomain, OnMatchList);
         }
 
@@ -50,12 +53,12 @@ namespace Mob
         bool isMatchCreateCallbackWaiting;
         public void CreateMatch(uint matchSize, string matchPassword, int eloScoreForMatch, int requestDomain, Action<MatchInfo> callback = null)
         {
-            if(isMatchCreateCallbackWaiting)
+            if (isMatchCreateCallbackWaiting)
                 return;
             isMatchCreateCallbackWaiting = true;
             _onMatchCreateCallback = callback;
-            var matchName = "match_" + Guid.NewGuid().ToString();
-            if(networkManager.matchMaker == null) return;
+            var matchName = "match" + Guid.NewGuid().ToString();
+            if (networkManager.matchMaker == null) return;
             networkManager.matchMaker.CreateMatch(matchName, matchSize, true, matchPassword, "", "", eloScoreForMatch, requestDomain, OnMatchCreate);
         }
 
@@ -63,11 +66,11 @@ namespace Mob
         bool isMatchJoinedCallbackWaiting;
         public void JoinMatch(NetworkID netId, string matchPassword, int eloScoreForClient, int requestDomain, Action<MatchInfo> callback = null)
         {
-            if(isMatchJoinedCallbackWaiting)
+            if (isMatchJoinedCallbackWaiting)
                 return;
             isMatchJoinedCallbackWaiting = true;
             _onMatchJoinedCallback = callback;
-            if(networkManager.matchMaker == null) return;
+            if (networkManager.matchMaker == null) return;
             networkManager.matchMaker.JoinMatch(netId, matchPassword, "", "", eloScoreForClient, requestDomain, OnMatchJoined);
         }
 
@@ -79,55 +82,85 @@ namespace Mob
             }
             else
             {
-                var lastMatch = matches[matches.Count - 1];
-                if (networkManager.matchInfo != null && lastMatch.networkId.Equals(networkManager.matchInfo.networkId))
+                foreach (var match in matches)
                 {
-                    return;
+                    if (networkManager.matchInfo != null && match.networkId.Equals(networkManager.matchInfo.networkId))
+                    {
+                        continue;
+                    }
+                    JoinMatch(match.networkId, matchPassword, eloScoreForMatch, requestDomain, callback);
                 }
-                JoinMatch(lastMatch.networkId, matchPassword, eloScoreForMatch, requestDomain, callback);
             }
         }
 
         Action _onMatchDestroyCallback;
         bool isMatchDestroyCallbackWaiting;
-        public void DestroyMatch(NetworkID netId, int requestDomain, Action callback = null) {
-            if(isMatchDestroyCallbackWaiting)
+        public void DestroyMatch(NetworkID netId, int requestDomain, Action callback = null)
+        {
+            if (isMatchDestroyCallbackWaiting)
                 return;
             isMatchDestroyCallbackWaiting = true;
             _onMatchDestroyCallback = callback;
             // networkManager.StopHost();
-            if(networkManager.matchMaker == null) return;
+            if (networkManager.matchMaker == null) return;
             networkManager.matchMaker.DestroyMatch(netId, requestDomain, OnMatchDestroy);
         }
 
-        public void Exit(Action actionExit = null){
+        public void Exit(Action actionExit = null)
+        {
             networkManager.playerState = PlayerState.Exiting;
-            GetMatchList(0, 20, 0, 0, matches => {
-                if(networkManager.matchInfo != null) {
-                    if(matches.Count > 0){
-                        var lastMatch = matches[matches.Count - 1];
-                        if(lastMatch.networkId == networkManager.matchInfo.networkId){
-                            DestroyMatch(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
-                        } else {
-                            DropConnection(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
+            GetMatchList(0, 20, 0, 0, matches =>
+            {
+                if (networkManager.matchInfo != null)
+                {
+                    if (matches.Count > 0)
+                    {
+                        foreach (var match in matches)
+                        {
+                            if (match.networkId == networkManager.matchInfo.networkId)
+                            {
+                                DestroyMatch(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
+                            }
+                            else
+                            {
+                                networkManager.StopClient();
+                                if (actionExit != null)
+                                {
+                                    actionExit.Invoke();
+                                }
+                                // DropConnection(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
+                            }
                         }
-                    }else{
-                        DropConnection(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
+                    }
+                    else
+                    {
+                        networkManager.StopClient();
+                        if (actionExit != null)
+                        {
+                            actionExit.Invoke();
+                        }
+                        // DropConnection(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
                     }
                 }
                 networkManager.playerState = PlayerState.Unknown;
             });
+            if (networkManager.matchMaker == null)
+            {
+                networkManager.StopClient();
+            }
         }
 
         Action _onMatchDropConnectionCallback;
         bool isMatchDropConnectionCallbackWaiting;
-        public void DropConnection(NetworkID netId, int requestDomain, Action callback =  null){
-            if(isMatchDropConnectionCallbackWaiting)
+        public void DropConnection(NetworkID netId, int requestDomain, Action callback = null)
+        {
+            if (isMatchDropConnectionCallbackWaiting)
                 return;
             isMatchDropConnectionCallbackWaiting = true;
             _onMatchDropConnectionCallback = callback;
             networkManager.StopClient();
-            if(callback != null){
+            if (callback != null)
+            {
                 callback.Invoke();
             }
             // networkManager.matchMaker.DropConnection(netId, NodeID.Invalid, requestDomain, OnMatchDropConnection);
@@ -156,12 +189,12 @@ namespace Mob
                 return;
             }
             isMatchCreateCallbackWaiting = false;
-            if(_onMatchCreateCallback != null)
+            if (_onMatchCreateCallback != null)
             {
                 _onMatchCreateCallback.Invoke(matchInfo);
             }
             networkManager.matchInfo = matchInfo;
-            MatchInfo hostInfo = matchInfo;
+            // MatchInfo hostInfo = matchInfo;
             // networkManager.StartHost(hostInfo);
             networkManager.OnMatchCreate(success, extendedInfo, matchInfo);
         }
@@ -174,7 +207,8 @@ namespace Mob
                 return;
             }
             isMatchJoinedCallbackWaiting = false;
-            if(_onMatchJoinedCallback != null){
+            if (_onMatchJoinedCallback != null)
+            {
                 _onMatchJoinedCallback.Invoke(matchInfo);
             }
             networkManager.matchInfo = matchInfo;
@@ -185,31 +219,33 @@ namespace Mob
 
         void OnMatchDestroy(bool success, string extendedInfo)
         {
-            if(!success) 
+            if (!success)
             {
                 isMatchDestroyCallbackWaiting = false;
                 return;
             }
             isMatchDestroyCallbackWaiting = false;
+            networkManager.matchInfo = null;
             networkManager.OnDestroyMatch(success, extendedInfo);
             networkManager.StopHost();
             networkManager.StopClient();
-            networkManager.matchInfo = null;
-            if(_onMatchDestroyCallback != null){
+            if (_onMatchDestroyCallback != null)
+            {
                 _onMatchDestroyCallback.Invoke();
             }
         }
 
         public void OnMatchDropConnection(bool success, string extendedInfo)
         {
-            if(!success) 
+            if (!success)
             {
                 isMatchDropConnectionCallbackWaiting = false;
                 return;
             }
             isMatchDropConnectionCallbackWaiting = false;
             networkManager.matchInfo = null;
-            if(_onMatchDropConnectionCallback != null){
+            if (_onMatchDropConnectionCallback != null)
+            {
                 _onMatchDropConnectionCallback.Invoke();
             }
         }
