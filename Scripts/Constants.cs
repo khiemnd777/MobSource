@@ -112,6 +112,7 @@ namespace Mob
 		public const string EVENT_CONNECTION_STATUS_ON_LOBBY_STOP_HOST = "connection-status-on-lobby-stop-host";
 		public const string EVENT_CONNECTION_STATUS_ON_PLAYER_HAS_ALREADY = "connection-status-on-player-has-already";
 		public const string EVENT_CONNECTION_STATUS_ON_PLAYER_COUNTDOWN = "connection-status-on-player-countdown";
+		public const string EVENT_CONNECTION_STATUS_ON_CLIENT_DISCONNECT_IN_BATTLE = "connection-status-on-client-disconnect-in-battle";
 	}
 }
 

@@ -135,13 +135,31 @@ namespace Mob
         //     base.OnLobbyClientExit();
         // }
     
+        public override void OnServerDisconnect(NetworkConnection conn){
+            Debug.Log("OnServerDisconnect");
+            switch(playerState){
+                case PlayerState.InBattle:
+                    playerState = PlayerState.Unknown;
+                    StopClient();
+                    break;
+                default:
+                    base.OnServerDisconnect(conn);
+                    break;
+            }
+        }
+
         public override void OnClientDisconnect(NetworkConnection conn){
             Debug.Log("OnClientDisconnect");
             switch(playerState){
+                case PlayerState.InBattle:
+                    EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_CLIENT_DISCONNECT_IN_BATTLE, new { conn = conn });
+                    StopClient();
+                    playerState = PlayerState.Unknown;
+                    break;
                 case PlayerState.Unknown:
                 case PlayerState.Exiting:
-                case PlayerState.InBattle:
                     EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_CLIENT_DISCONNECT);
+                    playerState = PlayerState.Unknown;
                     base.OnClientDisconnect(conn);
                 break;
                 case PlayerState.WaitingConnection:
@@ -231,6 +249,11 @@ namespace Mob
                 }
                 StartCoroutine(ServerCountdownCoroutine());
             }
+        }
+
+        public override void OnClientSceneChanged(NetworkConnection conn){
+            playerState = PlayerState.InBattle;
+            base.OnClientSceneChanged(conn);
         }
 
         GameObject CreateCharacter<T>(Action<T> predicate = null) where T : Race
