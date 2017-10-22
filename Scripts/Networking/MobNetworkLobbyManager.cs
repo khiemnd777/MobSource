@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Networking.Match;
 using System;
 using System.Linq;
 using System.Collections;
@@ -256,6 +257,21 @@ namespace Mob
             base.OnClientSceneChanged(conn);
         }
 
+        public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo){
+            StartCoroutine(MobUtility.WaitInWhile(7f, () => {
+                return matchMaker == null || !lobbySlots.Any(x => x.IsNull());
+            }, () => {
+                PlayerMatchMaker.instance.DestroyMatch(matchInfo.networkId, matchInfo.domain, () => {
+                    playerState = PlayerState.WaitingConnection;
+                    PlayerMatchMaker.instance.StartMatchMaker();
+                    PlayerMatchMaker.instance.GetMatchList(0, 20, 0, 0, matches => {
+                        PlayerMatchMaker.instance.CreateOrJoinMatch(matches, 2, "", 0, 0);
+                    });
+                });
+            }));
+            base.OnMatchCreate(success, extendedInfo, matchInfo);
+        }
+
         GameObject CreateCharacter<T>(Action<T> predicate = null) where T : Race
 		{
 			var prefabObj = spawnPrefabs.SingleOrDefault(x => x.GetComponent<T>() != null);
@@ -279,7 +295,7 @@ namespace Mob
                 yield return null;
 
                 remainingTime -= Time.deltaTime;
-                int newFloorTime = Mathf.FloorToInt(remainingTime);
+                var newFloorTime = Mathf.FloorToInt(remainingTime);
 
                 if (newFloorTime != floorTime)
                 {
@@ -297,6 +313,6 @@ namespace Mob
             }
             ServerChangeScene(playScene);
         }
-
+        // End of function
     }
 }

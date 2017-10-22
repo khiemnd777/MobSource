@@ -42,6 +42,7 @@ namespace Mob
                 return;
             isMatchListCallbackWaiting = true;
             _onMatchListCallback = callback;
+            if(networkManager.matchMaker == null) return;
             networkManager.matchMaker.ListMatches(startPageNumber, resultPageSize, "", true, eloScoreTarget, requestDomain, OnMatchList);
         }
 
@@ -54,6 +55,7 @@ namespace Mob
             isMatchCreateCallbackWaiting = true;
             _onMatchCreateCallback = callback;
             var matchName = "match_" + Guid.NewGuid().ToString();
+            if(networkManager.matchMaker == null) return;
             networkManager.matchMaker.CreateMatch(matchName, matchSize, true, matchPassword, "", "", eloScoreForMatch, requestDomain, OnMatchCreate);
         }
 
@@ -65,6 +67,7 @@ namespace Mob
                 return;
             isMatchJoinedCallbackWaiting = true;
             _onMatchJoinedCallback = callback;
+            if(networkManager.matchMaker == null) return;
             networkManager.matchMaker.JoinMatch(netId, matchPassword, "", "", eloScoreForClient, requestDomain, OnMatchJoined);
         }
 
@@ -93,6 +96,7 @@ namespace Mob
             isMatchDestroyCallbackWaiting = true;
             _onMatchDestroyCallback = callback;
             // networkManager.StopHost();
+            if(networkManager.matchMaker == null) return;
             networkManager.matchMaker.DestroyMatch(netId, requestDomain, OnMatchDestroy);
         }
 
