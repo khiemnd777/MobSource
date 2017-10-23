@@ -109,45 +109,51 @@ namespace Mob
         public void Exit(Action actionExit = null)
         {
             networkManager.playerState = PlayerState.Exiting;
-            GetMatchList(0, 20, 0, 0, matches =>
+            networkManager.StopClient();
+            if (actionExit != null)
             {
-                if (networkManager.matchInfo != null)
-                {
-                    if (matches.Count > 0)
-                    {
-                        foreach (var match in matches)
-                        {
-                            if (match.networkId == networkManager.matchInfo.networkId)
-                            {
-                                DestroyMatch(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
-                            }
-                            else
-                            {
-                                networkManager.StopClient();
-                                if (actionExit != null)
-                                {
-                                    actionExit.Invoke();
-                                }
-                                // DropConnection(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        networkManager.StopClient();
-                        if (actionExit != null)
-                        {
-                            actionExit.Invoke();
-                        }
-                        // DropConnection(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
-                    }
-                }
-                networkManager.playerState = PlayerState.Unknown;
-            });
-            if (networkManager.matchMaker == null)
-            {
-                networkManager.StopClient();
+                actionExit.Invoke();
             }
+            // StartMatchMaker();
+            // GetMatchList(0, 20, 0, 0, matches =>
+            // {
+            //     // if (networkManager.matchInfo != null)
+            //     // {
+            //     //     if (matches.Count > 0)
+            //     //     {
+            //     //         foreach (var match in matches)
+            //     //         {
+            //     //             if (match.networkId == networkManager.matchInfo.networkId)
+            //     //             {
+            //     //                 DestroyMatch(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
+            //     //             }
+            //     //             // else
+            //     //             // {
+            //     //             //     networkManager.StopClient();
+            //     //             //     if (actionExit != null)
+            //     //             //     {
+            //     //             //         actionExit.Invoke();
+            //     //             //     }
+            //     //             //     // DropConnection(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
+            //     //             // }
+            //     //         }
+            //     //     }
+            //     //     else
+            //     //     {
+            //     //         networkManager.StopClient();
+            //     //         if (actionExit != null)
+            //     //         {
+            //     //             actionExit.Invoke();
+            //     //         }
+            //     //         // DropConnection(networkManager.matchInfo.networkId, networkManager.matchInfo.domain, actionExit);
+            //     //     }
+            //     // }
+            //     networkManager.playerState = PlayerState.Unknown;
+            // });
+            // if (networkManager.matchMaker == null)
+            // {
+            //     networkManager.StopClient();
+            // }
         }
 
         Action _onMatchDropConnectionCallback;
@@ -227,8 +233,6 @@ namespace Mob
             isMatchDestroyCallbackWaiting = false;
             networkManager.matchInfo = null;
             networkManager.OnDestroyMatch(success, extendedInfo);
-            networkManager.StopHost();
-            networkManager.StopClient();
             if (_onMatchDestroyCallback != null)
             {
                 _onMatchDestroyCallback.Invoke();

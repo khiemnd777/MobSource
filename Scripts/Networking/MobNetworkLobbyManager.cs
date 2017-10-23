@@ -141,7 +141,10 @@ namespace Mob
             switch(playerState){
                 case PlayerState.InBattle:
                     playerState = PlayerState.Unknown;
-                    PlayerMatchMaker.instance.Exit();
+                    // PlayerMatchMaker.instance.Exit();
+                    if(matchInfo != null){
+                        PlayerMatchMaker.instance.DestroyMatch(matchInfo.networkId, matchInfo.domain);
+                    }
                     break;
                 default:
                     base.OnServerDisconnect(conn);
@@ -149,13 +152,19 @@ namespace Mob
             }
         }
 
+        public override void OnDestroyMatch(bool success, string extendedInfo){
+            StopHost();
+            base.OnDestroyMatch(success, extendedInfo);
+        }
+
         public override void OnClientDisconnect(NetworkConnection conn){
             Debug.Log("OnClientDisconnect");
             switch(playerState){
                 case PlayerState.InBattle:
                     EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_CLIENT_DISCONNECT_IN_BATTLE, new { conn = conn });
-                    StopClient();
                     playerState = PlayerState.Unknown;
+                    // PlayerMatchMaker.instance.Exit();
+                    base.OnClientDisconnect(conn);
                     break;
                 case PlayerState.Unknown:
                 case PlayerState.Exiting:
@@ -249,7 +258,8 @@ namespace Mob
                         lobbyPlayer.TargetPlayerHasAlready(lobbyPlayer.connectionToClient);
                     }
                 }
-                StartCoroutine(ServerCountdownCoroutine());
+                ServerChangeScene(playScene);
+                // StartCoroutine(ServerCountdownCoroutine());
             }
         }
 
@@ -259,11 +269,12 @@ namespace Mob
         }
 
         public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo){
+            var m_Info = matchInfo;
             StartCoroutine(MobUtility.WaitInWhile(7f, () => {
-                Debug.Log("OnMatchCreateInWhile");
                 return matchMaker == null || !lobbySlots.Any(x => x.IsNull());
             }, () => {
-                PlayerMatchMaker.instance.DestroyMatch(matchInfo.networkId, matchInfo.domain, () => {
+                Debug.Log(m_Info.networkId);
+                PlayerMatchMaker.instance.DestroyMatch(m_Info.networkId, m_Info.domain, () => {
                     playerState = PlayerState.WaitingConnection;
                     PlayerMatchMaker.instance.StartMatchMaker();
                     PlayerMatchMaker.instance.GetMatchList(0, 20, 0, 0, matches => {
