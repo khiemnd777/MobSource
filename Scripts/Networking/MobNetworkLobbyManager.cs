@@ -104,16 +104,17 @@ namespace Mob
 
         public override void OnDropConnection(bool success, string extendedInfo){
             Debug.Log("OnDropConnection");
-            switch(playerState){
-                case PlayerState.Unknown:
-                case PlayerState.Exiting:
-                case PlayerState.InBattle:
-                    EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_DROP_CONNECTION);
-                    base.OnDropConnection(success, extendedInfo);
-                break;
-                default:
-                break;
-            }
+            // switch(playerState){
+            //     case PlayerState.Unknown:
+            //     case PlayerState.Exiting:
+            //     case PlayerState.InBattle:
+            //         EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_DROP_CONNECTION);
+            //         base.OnDropConnection(success, extendedInfo);
+            //     break;
+            //     default:
+            //     break;
+            // }
+            base.OnDropConnection(success, extendedInfo);
         }
 
         // public override void OnClientNotReady(NetworkConnection conn){
@@ -138,22 +139,22 @@ namespace Mob
     
         public override void OnServerDisconnect(NetworkConnection conn){
             Debug.Log("OnServerDisconnect");
-            switch(playerState){
-                case PlayerState.InBattle:
-                    playerState = PlayerState.Unknown;
-                    // PlayerMatchMaker.instance.Exit();
-                    if(matchInfo != null){
-                        PlayerMatchMaker.instance.DestroyMatch(matchInfo.networkId, matchInfo.domain);
-                    }
-                    break;
-                default:
-                    base.OnServerDisconnect(conn);
-                    break;
-            }
+            // switch(playerState){
+            //     case PlayerState.InBattle:
+            //         playerState = PlayerState.Unknown;
+            //         // PlayerMatchMaker.instance.Exit();
+            //         if(matchInfo != null){
+            //             PlayerMatchMaker.instance.DestroyMatch(matchInfo.networkId, matchInfo.domain);
+            //         }
+            //         break;
+            //     default:
+            //         base.OnServerDisconnect(conn);
+            //         break;
+            // }
+            base.OnServerDisconnect(conn);
         }
 
         public override void OnDestroyMatch(bool success, string extendedInfo){
-            StopHost();
             base.OnDestroyMatch(success, extendedInfo);
         }
 
