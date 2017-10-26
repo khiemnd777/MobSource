@@ -111,12 +111,16 @@ namespace Mob
         public void Exit(Action actionExit = null)
         {
             networkManager.playerState = PlayerState.Exiting;
-            networkManager.StopHost();
-            networkManager.StopClient();
-            if (actionExit != null)
-            {
-                actionExit.Invoke();
+            // networkManager.StopHost();
+            // networkManager.StopClient();
+            var currentMatchInfo = networkManager.matchInfo;
+            if(currentMatchInfo == null){
+                if(actionExit != null){
+                    actionExit.Invoke();
+                }
+                return;
             }
+            DropConnection(currentMatchInfo.networkId, currentMatchInfo.nodeId, currentMatchInfo.domain, actionExit);
             // StartMatchMaker();
             // GetMatchList(0, 20, 0, 0, matches =>
             // {
@@ -168,10 +172,6 @@ namespace Mob
             //isMatchDropConnectionCallbackWaiting = true;
             _onMatchDropConnectionCallback = callback;
             //networkManager.StopClient();
-            if (callback != null)
-            {
-                callback.Invoke();
-            }
             networkManager.matchMaker.DropConnection(netId, dropNodeId, requestDomain, OnMatchDropConnection);
         }
 
@@ -208,7 +208,7 @@ namespace Mob
             NetworkServer.Listen(matchInfo, 9000);
             networkManager.StartHost(hostInfo);
             // networkManager.matchInfo = matchInfo;
-            //networkManager.OnMatchCreate(success, extendedInfo, matchInfo);
+            // networkManager.OnMatchCreate(success, extendedInfo, matchInfo);
         }
 
         void OnMatchJoined(bool success, string extendedInfo, MatchInfo matchInfo)
@@ -249,14 +249,17 @@ namespace Mob
 
         public void OnMatchDropConnection(bool success, string extendedInfo)
         {
-            if (!success)
-            {
-                Debug.Log("Drop connection failed");
-                //isMatchDropConnectionCallbackWaiting = false;
-                return;
-            }
+            // if (!success)
+            // {
+            //     Debug.Log("Drop connection failed");
+            //     //isMatchDropConnectionCallbackWaiting = false;
+            //     return;
+            // }
             //isMatchDropConnectionCallbackWaiting = false;
             // networkManager.matchInfo = null;
+            // networkManager.StopHost();
+            networkManager.StopClient();
+            
             if (_onMatchDropConnectionCallback != null)
             {
                 _onMatchDropConnectionCallback.Invoke();

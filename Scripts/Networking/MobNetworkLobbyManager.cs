@@ -97,6 +97,7 @@ namespace Mob
             var lobbyGo = GameObject.Instantiate(lobbyPlayerPrefab, Vector3.zero, Quaternion.identity);
             var lobbyPlayer = lobbyGo.GetComponent<MobNetworkLobbyPlayer>();
             lobbyPlayer.characterType = characterType;
+            lobbyPlayer.ShowLobbyGUI = false;
             return lobbyGo.gameObject;
         }
 
@@ -114,6 +115,7 @@ namespace Mob
             //     default:
             //     break;
             // }
+            // StopClient();
             base.OnDropConnection(success, extendedInfo);
         }
 
@@ -185,23 +187,24 @@ namespace Mob
 
         public override void OnLobbyStopClient(){
             Debug.Log("OnLobbyStopClient");
-            switch(playerState){
-                default:
-                case PlayerState.InBattle:
-                case PlayerState.Unknown:
-                case PlayerState.Exiting:
-                    EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_CLIENT_DISCONNECT);
-                    playerState = PlayerState.Unknown;
-                    base.OnLobbyStopClient();
-                break;
-                case PlayerState.WaitingConnection:
-                case PlayerState.FindingAppropriateBattle:
-                    PlayerMatchMaker.instance.StartMatchMaker();
-                    PlayerMatchMaker.instance.GetMatchList(0, 20, 0, 0, matches => {
-                        PlayerMatchMaker.instance.CreateOrJoinMatch(matches, 2, "", 0, 0);
-                    });
-                break;
-            }
+            // switch(playerState){
+            //     default:
+            //     case PlayerState.InBattle:
+            //     case PlayerState.Unknown:
+            //     case PlayerState.Exiting:
+            //         EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_CLIENT_DISCONNECT);
+            //         playerState = PlayerState.Unknown;
+            //         base.OnLobbyStopClient();
+            //     break;
+            //     case PlayerState.WaitingConnection:
+            //     case PlayerState.FindingAppropriateBattle:
+            //         PlayerMatchMaker.instance.StartMatchMaker();
+            //         PlayerMatchMaker.instance.GetMatchList(0, 20, 0, 0, matches => {
+            //             PlayerMatchMaker.instance.CreateOrJoinMatch(matches, 2, "", 0, 0);
+            //         });
+            //     break;
+            // }
+            // base.OnLobbyStopClient();
         }
 
         // public override void OnStopServer(){
