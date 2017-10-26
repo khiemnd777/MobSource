@@ -154,36 +154,9 @@ namespace Mob
             base.OnServerDisconnect(conn);
         }
 
-        public override void OnDestroyMatch(bool success, string extendedInfo){
-            base.OnDestroyMatch(success, extendedInfo);
-        }
-
         public override void OnClientDisconnect(NetworkConnection conn){
             Debug.Log("OnClientDisconnect");
-            switch(playerState){
-                case PlayerState.InBattle:
-                    EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_CLIENT_DISCONNECT_IN_BATTLE, new { conn = conn });
-                    playerState = PlayerState.Unknown;
-                    // PlayerMatchMaker.instance.Exit();
-                    base.OnClientDisconnect(conn);
-                    break;
-                case PlayerState.Unknown:
-                case PlayerState.Exiting:
-                    EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_CLIENT_DISCONNECT);
-                    playerState = PlayerState.Unknown;
-                    base.OnClientDisconnect(conn);
-                break;
-                case PlayerState.WaitingConnection:
-                case PlayerState.FindingAppropriateBattle:
-                    PlayerMatchMaker.instance.StartMatchMaker();
-                    PlayerMatchMaker.instance.GetMatchList(0, 20, 0, 0, matches => {
-                        PlayerMatchMaker.instance.CreateOrJoinMatch(matches, 2, "", 0, 0);
-                    });
-                break;
-                default:
-                    base.OnClientDisconnect(conn);
-                break;
-            }
+            base.OnClientDisconnect(conn);
         }
 
         public override void OnClientError(NetworkConnection conn, int errorCode){
@@ -210,10 +183,26 @@ namespace Mob
         //     base.OnLobbyClientDisconnect(conn);
         // }
 
-        // public override void OnLobbyStopClient(){
-        //     Debug.Log("OnLobbyStopClient");
-        //     base.OnLobbyStopClient();
-        // }
+        public override void OnLobbyStopClient(){
+            Debug.Log("OnLobbyStopClient");
+            switch(playerState){
+                default:
+                case PlayerState.InBattle:
+                case PlayerState.Unknown:
+                case PlayerState.Exiting:
+                    EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_CLIENT_DISCONNECT);
+                    playerState = PlayerState.Unknown;
+                    base.OnLobbyStopClient();
+                break;
+                case PlayerState.WaitingConnection:
+                case PlayerState.FindingAppropriateBattle:
+                    PlayerMatchMaker.instance.StartMatchMaker();
+                    PlayerMatchMaker.instance.GetMatchList(0, 20, 0, 0, matches => {
+                        PlayerMatchMaker.instance.CreateOrJoinMatch(matches, 2, "", 0, 0);
+                    });
+                break;
+            }
+        }
 
         // public override void OnStopServer(){
         //     Debug.Log("OnStopServer");
@@ -270,19 +259,19 @@ namespace Mob
         }
 
         public override void OnMatchCreate(bool success, string extendedInfo, MatchInfo matchInfo){
-            var m_Info = matchInfo;
-            StartCoroutine(MobUtility.WaitInWhile(7f, () => {
-                return matchMaker == null || !lobbySlots.Any(x => x.IsNull());
-            }, () => {
-                Debug.Log(m_Info.networkId);
-                PlayerMatchMaker.instance.DestroyMatch(m_Info.networkId, m_Info.domain, () => {
-                    playerState = PlayerState.WaitingConnection;
-                    PlayerMatchMaker.instance.StartMatchMaker();
-                    PlayerMatchMaker.instance.GetMatchList(0, 20, 0, 0, matches => {
-                        PlayerMatchMaker.instance.CreateOrJoinMatch(matches, 2, "", 0, 0);
-                    });
-                });
-            }));
+            // var m_Info = matchInfo;
+            // StartCoroutine(MobUtility.WaitInWhile(7f, () => {
+            //     return matchMaker == null || !lobbySlots.Any(x => x.IsNull());
+            // }, () => {
+            //     Debug.Log(m_Info.networkId);
+            //     PlayerMatchMaker.instance.DestroyMatch(m_Info.networkId, m_Info.domain, () => {
+            //         playerState = PlayerState.WaitingConnection;
+            //         PlayerMatchMaker.instance.StartMatchMaker();
+            //         PlayerMatchMaker.instance.GetMatchList(0, 20, 0, 0, matches => {
+            //             PlayerMatchMaker.instance.CreateOrJoinMatch(matches, 2, "", 0, 0);
+            //         });
+            //     });
+            // }));
             base.OnMatchCreate(success, extendedInfo, matchInfo);
         }
 
