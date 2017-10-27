@@ -59,6 +59,7 @@ namespace Mob
             _onMatchCreateCallback = callback;
             var matchName = "match" + Guid.NewGuid().ToString();
             if (networkManager.matchMaker == null) return;
+            networkManager.maxPlayers = Convert.ToInt32(matchSize);
             networkManager.matchMaker.CreateMatch(matchName, matchSize, true, matchPassword, "", "", eloScoreForMatch, requestDomain, OnMatchCreate);
         }
 
@@ -205,7 +206,7 @@ namespace Mob
                 _onMatchCreateCallback.Invoke(matchInfo);
             }
             MatchInfo hostInfo = matchInfo;
-            NetworkServer.Listen(matchInfo, 9000);
+            NetworkServer.Listen(hostInfo, 9000);
             networkManager.StartHost(hostInfo);
             // networkManager.matchInfo = matchInfo;
             // networkManager.OnMatchCreate(success, extendedInfo, matchInfo);
@@ -259,7 +260,7 @@ namespace Mob
             // networkManager.matchInfo = null;
             // networkManager.StopHost();
             networkManager.StopClient();
-            
+            networkManager.playerState = PlayerState.Exited;
             if (_onMatchDropConnectionCallback != null)
             {
                 _onMatchDropConnectionCallback.Invoke();

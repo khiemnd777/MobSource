@@ -105,6 +105,7 @@ namespace Mob
 
         public override void OnDropConnection(bool success, string extendedInfo){
             Debug.Log("OnDropConnection");
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_DROP_CONNECTION);
             // switch(playerState){
             //     case PlayerState.Unknown:
             //     case PlayerState.Exiting:
@@ -141,6 +142,8 @@ namespace Mob
     
         public override void OnServerDisconnect(NetworkConnection conn){
             Debug.Log("OnServerDisconnect");
+            playerState = PlayerState.Disconnected;
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_SERVER_DISCONNECT);
             // switch(playerState){
             //     case PlayerState.InBattle:
             //         playerState = PlayerState.Unknown;
@@ -158,13 +161,15 @@ namespace Mob
 
         public override void OnClientDisconnect(NetworkConnection conn){
             Debug.Log("OnClientDisconnect");
+            playerState = PlayerState.Disconnected;
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_CLIENT_DISCONNECT);
             base.OnClientDisconnect(conn);
         }
 
         public override void OnClientError(NetworkConnection conn, int errorCode){
             Debug.Log("OnClientError");
+            playerState = PlayerState.ErrorConnection;
             EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_CLIENT_ERROR);
-            playerState = PlayerState.Unknown;
             base.OnClientError(conn, errorCode);
         }
 
@@ -187,6 +192,7 @@ namespace Mob
 
         public override void OnLobbyStopClient(){
             Debug.Log("OnLobbyStopClient");
+            EventManager.TriggerEvent(Constants.EVENT_CONNECTION_STATUS_ON_LOBBY_STOP_CLIENT);
             // switch(playerState){
             //     default:
             //     case PlayerState.InBattle:
@@ -204,7 +210,7 @@ namespace Mob
             //         });
             //     break;
             // }
-            // base.OnLobbyStopClient();
+            base.OnLobbyStopClient();
         }
 
         // public override void OnStopServer(){

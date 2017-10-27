@@ -17,7 +17,7 @@ namespace Mob
 	}
 
 	public enum PlayerState{
-		Unknown, FindingAppropriateBattle, WaitingConnection, InBattle, Exiting
+		Unknown, FindingAppropriateBattle, WaitingConnection, InBattle, Exiting, Exited, ErrorConnection, Disconnected
 	}
 }
 
