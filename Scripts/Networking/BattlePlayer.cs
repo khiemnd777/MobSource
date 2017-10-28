@@ -44,8 +44,8 @@ namespace Mob
         // Todo: For the testing purpose, we should use the default character
         public void InitCharacter()
         {
-            // if (isServer)
-            // {
+            if (isServer)
+            {
                 switch (characterType)
                 {
                     default:
@@ -71,7 +71,7 @@ namespace Mob
                     case CharacterType.Mage:
                         break;
                 }
-            // }
+            }
         }
 
 		void CreateCharacter<T>(Action<T> predicate) where T : Race
@@ -80,7 +80,7 @@ namespace Mob
 			if(prefabObj.IsNull())
 				return;
 			character = Race.Create<T>((T)prefabObj, predicate);
-            // SpawnWithClientAuthority();
+            SpawnWithClientAuthority();
 		}
 
         [Command]

@@ -25,16 +25,18 @@ namespace Mob
 
 		public override void OnStartClient ()
 		{
-			// var playerGo = ClientScene.FindLocalObject(new NetworkInstanceId(playerNetId));
-			// var netIdentity = GetComponent<NetworkIdentity> ();
-			// tag = netIdentity.isLocalPlayer ? Constants.LOCAL_CHARACTER : Constants.OPPONENT_CHARACTER;
+			var playerGo = ClientScene.FindLocalObject(new NetworkInstanceId(playerNetId));
+			var netIdentity = playerGo.GetComponent<NetworkIdentity> ();
+			tag = netIdentity.isLocalPlayer ? Constants.LOCAL_CHARACTER : Constants.OPPONENT_CHARACTER;
 		}
 
+		/*
+		*	It's used for main flow 
 		public override void OnStartLocalPlayer(){
 			var netIdentity = GetComponent<NetworkIdentity> ();
 			tag = netIdentity.isLocalPlayer ? Constants.LOCAL_CHARACTER : Constants.OPPONENT_CHARACTER;
 		}
-
+		*/
 		public T GetModule<T>(System.Action<T> predicate = null) where T : RaceModule
 		{
 			var module = GetComponent<T> ();	
