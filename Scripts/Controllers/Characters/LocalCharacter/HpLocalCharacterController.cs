@@ -17,6 +17,7 @@ namespace Mob
 			text = GetComponent<Text> ();
 			text.text = "9999/9999";
 			EventManager.StartListening(Constants.EVENT_HP_SUBTRACTING_EFFECT, new Action<EffectValueTransferModule, uint>(SubtractHpEffect));
+			EventManager.StartListening(Constants.EVENT_HP_ADDING_EFFECT, new Action<EffectValueTransferModule, uint>(AddHpEffect));
 		}
 
 		void Update(){

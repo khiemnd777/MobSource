@@ -155,10 +155,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 123da63f2170648b78e149dcb0112635, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  color: {r: 0.9264706, g: 0.034061395, b: 0.034061395, a: 1}
   backgroundBar: {fileID: 114261487597954540}
   mainBar: {fileID: 114548277857621338}
-  timeUpdateMainBar: 0.25
-  color: {r: 0.9264706, g: 0.034061395, b: 0.034061395, a: 1}
+  durationUpdatingMainBar: 1
+  shakingDuration: 1
+  shakingAmount: 5
 --- !u!222 &222058591641936016
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -230,6 +232,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25, y: -158}
+  m_AnchoredPosition: {x: 25, y: -130}
   m_SizeDelta: {x: 236, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}

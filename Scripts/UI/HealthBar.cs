@@ -11,9 +11,13 @@ namespace Mob
         public Color color;
         public Image backgroundBar;
         public Image mainBar;
+        [Space]
+        [Range(0f, 1f)]
         public float durationUpdatingMainBar = .25f;
         [Space]
+        [Range(0f, 1f)]
         public float shakingDuration = .25f;
+        [Range(0f, 10f)]
         public float shakingAmount = .2f;
 
         Vector3 _originalPosition;
@@ -33,6 +37,17 @@ namespace Mob
                 }, durationUpdatingMainBar);
                 Shake(shakingDuration, shakingAmount, _cachedTransform, _originalPosition);
             }));
+        }
+
+        public void FillAmount(float amount){
+            MathfLerp(mainBar.fillAmount, amount, (value) => {
+                mainBar.fillAmount = value;
+            }, durationUpdatingMainBar);
+        }
+
+        public void FillAmountAndShake(float amount){
+            FillAmount(amount);
+            Shake(shakingDuration, shakingAmount, _cachedTransform, _originalPosition);
         }
     }
 }
