@@ -68,7 +68,7 @@ namespace Mob
 		void RefreshSyncAvailableSkills(){
 			var removedItems = new List<SyncSkillBoughtItem> ();
 			foreach (var syncObj in syncAvailableSkills) {
-				if (availableSkills.Any (x => x.GetInstanceID () == syncObj.id))
+				if (availableSkills.Any (x => x.GetInstanceID() == syncObj.id))
 					continue;
 				removedItems.Add (syncObj);
 			}

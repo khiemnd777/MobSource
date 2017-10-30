@@ -366,6 +366,15 @@ namespace Mob
 			StartCoroutine (OnWhile (act, step, t));
 		}
 
+		protected void Shake(float duration, float amount, Transform target, Vector3 originalPosition){
+			StopCoroutine("OnShaking");
+			StartCoroutine(OnShaking(duration, amount, target, originalPosition));
+		}
+
+		protected IEnumerator OnShaking (float duration, float amount, Transform target, Vector3 originalPosition){
+			return MobEffect.Shaking(duration, amount, target, originalPosition);
+		}
+
 		protected void MathfLerp(float from , float to, Action<float> result = null, float t = 1f){
 			StartCoroutine (OnMathfLerp (from, to, result, t));
 		}

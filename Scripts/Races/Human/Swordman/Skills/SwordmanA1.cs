@@ -46,7 +46,6 @@ namespace Mob
 				var targetGo = ClientScene.FindLocalObject(new NetworkInstanceId(targetNetId));
 				var target = targetGo.GetComponent<Race> ();
 				EventManager.TriggerEvent (Constants.EVENT_HP_SUBTRACTING_EFFECT, new { evt = evt, targetNetId = targetNetId });
-
 				if (targetHpLabel == null) {
 					target.GetModule<HealthPowerModule> (x => x.SubtractHpEffect ());
 				} else {
