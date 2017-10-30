@@ -10,6 +10,7 @@ namespace Mob
 		public Text className;
 		public Text level;
 		public Text gainPoint;
+		public HealthBar healthBar;
 
 		Race _character;
 		LevelModule _levelModule;

@@ -1482,9 +1482,20 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 114743704775144184, guid: 53e0be9333ee44424b0e3b0de9426171,
+        type: 2}
+      propertyPath: showLabel
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 53e0be9333ee44424b0e3b0de9426171, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &575516752 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114743704775144184, guid: 53e0be9333ee44424b0e3b0de9426171,
+    type: 2}
+  m_PrefabInternal: {fileID: 575516751}
+  m_Script: {fileID: 11500000, guid: 123da63f2170648b78e149dcb0112635, type: 3}
 --- !u!1 &715367011
 GameObject:
   m_ObjectHideFlags: 0
@@ -4459,6 +4470,7 @@ GameObject:
   - component: {fileID: 2064914302}
   - component: {fileID: 2064914304}
   - component: {fileID: 2064914303}
+  - component: {fileID: 2064914305}
   m_Layer: 5
   m_Name: Player Character Panel
   m_TagString: Untagged
@@ -4519,6 +4531,21 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2064914301}
+--- !u!114 &2064914305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2064914301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e012002b7ad1a4d83a6d0ce9d1b741fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  className: {fileID: 0}
+  level: {fileID: 0}
+  gainPoint: {fileID: 0}
+  healthBar: {fileID: 575516752}
 --- !u!1 &2101608818
 GameObject:
   m_ObjectHideFlags: 0
