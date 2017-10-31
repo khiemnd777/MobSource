@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Mob
 {
-    public class Punch : MobBehaviour
+    public class Healing : MobBehaviour
     {
 		public HealthBar healthBar;
 		
@@ -13,18 +13,18 @@ namespace Mob
 		float health = 250f;
 		float startHealth;
 
-        void Start()
+		void Start()
         {
 			startHealth = health;
 			healthBar.SetLabel(health, startHealth);
-			healthBar.Subtract(health / startHealth, false);
+			healthBar.Add(health / startHealth, false);
 			GetComponent<Button>().onClick.AddListener(() => {
-				health -= Mathf.FloorToInt(Random.Range(7f, 85f));
-				if(health <= 0f)
-					health = 0f;
+				health += Mathf.FloorToInt(Random.Range(7f, 85f));
+				if(health > startHealth)
+					health = startHealth;
 				healthBar.SetLabel(health, startHealth);
-				healthBar.Subtract(health / startHealth);
+				healthBar.Add(health / startHealth);
 			});
         }
-    }
+	}
 }

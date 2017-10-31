@@ -253,6 +253,7 @@ MonoBehaviour:
   labelFormat: '{0}/{1}'
   durationUpdatingMainBar: 0.2
   durationWaitUntilSubBar: 0.625
+  durationWaitUntilMainBar: 0.5
   shakingDuration: 0.25
   shakingAmount: 6.75
 --- !u!222 &222058591641936016
