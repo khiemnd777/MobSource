@@ -48,6 +48,7 @@ namespace Mob
 		public void AddHp(float p){
 			hp = Mathf.Min(hp + p, maxHp);
 			RefreshSyncHpField ();
+			RpcAddHp(hp, maxHp);
 		}
 
 		public void AddHpEffect(){
@@ -60,6 +61,7 @@ namespace Mob
 		public void SubtractHp(float p){
 			hp = Mathf.Max(hp - p, 0f);
 			RefreshSyncHpField ();
+			RpcSubtractHp(hp, maxHp);
 		}
 
 		public void SubtractHpEffect(){
@@ -87,6 +89,8 @@ namespace Mob
 			}
 			if(setFullHp)
 				SetFullHp();
+			RefreshSyncHpField();
+			RpcChangeHp(hp, maxHp);
 		}
 
 		public void SetMaxHpEffect(bool setFullHp = true){
@@ -97,13 +101,28 @@ namespace Mob
 				SetFullHpEffect();
 		}
 
-		void OnChangeHp(float currentHp){
-			EventManager.TriggerEvent (Constants.EVENT_REFRESH_SYNC_HP, new { hp = currentHp, maxHp = maxHp, ownNetId = _race.netId.Value });
+		[ClientRpc]
+		void RpcChangeHp(float hp, float maxHp){
+			EventManager.TriggerEvent (Constants.EVENT_REFRESH_SYNC_HP, new { hp = hp, maxHp = maxHp, ownNetId = _race.netId.Value });
 		}
 
-		void OnChangeMaxHp(float currentMaxHp){
-			EventManager.TriggerEvent(Constants.EVENT_REFRESH_SYNC_HP, new { hp = hp, maxHp = currentMaxHp, ownNetId = _race.netId.Value });
+		[ClientRpc]
+		void RpcAddHp(float hp, float maxHp){
+			EventManager.TriggerEvent (Constants.EVENT_CLIENT_ADD_HP, new { hp = hp, maxHp = maxHp, ownNetId = _race.netId.Value });
 		}
+
+		[ClientRpc]
+		void RpcSubtractHp(float hp, float maxHp){
+			EventManager.TriggerEvent (Constants.EVENT_CLIENT_SUBTRACT_HP, new { hp = hp, maxHp = maxHp, ownNetId = _race.netId.Value });
+		}
+
+		// void OnChangeHp(float currentHp){
+		// 	EventManager.TriggerEvent (Constants.EVENT_REFRESH_SYNC_HP, new { hp = currentHp, maxHp = maxHp, ownNetId = _race.netId.Value });
+		// }
+
+		// void OnChangeMaxHp(float currentMaxHp){
+		// 	EventManager.TriggerEvent(Constants.EVENT_REFRESH_SYNC_HP, new { hp = hp, maxHp = currentMaxHp, ownNetId = _race.netId.Value });
+		// }
 	}
 }
 

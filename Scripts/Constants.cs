@@ -55,6 +55,8 @@ namespace Mob
 		public const string EVENT_REFRESH_SYNC_LEVEL = "refresh-sync-level";
 		public const string EVENT_REFRESH_SYNC_UP_LEVEL = "refresh-sync-up-level";
 		public const string EVENT_REFRESH_SYNC_HP = "refresh-sync-hp";
+		public const string EVENT_CLIENT_ADD_HP = "client-add-hp";
+		public const string EVENT_CLIENT_SUBTRACT_HP = "client-subtract-hp";
 		public const string EVENT_REFRESH_SYNC_ENERGY = "refresh-sync-energy";
 		public const string EVENT_REFRESH_SYNC_GOLD = "refresh-sync-gold";
 		public const string EVENT_GOLD_DICE_ROLLED = "gold-dice-rolled";

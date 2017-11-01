@@ -10,7 +10,9 @@ namespace Mob
 		public Text className;
 		public Text level;
 		public Text gainPoint;
-		public HealthBar healthBar;
+		public HealthBar hpBar;
+		public HealthBar epBar;
+		public HealthBar expBar;
 
 		Race _character;
 		LevelModule _levelModule;
@@ -21,11 +23,33 @@ namespace Mob
 		void Start(){
 			EventManager.StartListening (Constants.EVENT_REFRESH_SYNC_LEVEL, new Action<int, uint>(RefreshLevel));
 			EventManager.StartListening (Constants.EVENT_REFRESH_SYNC_UP_LEVEL, new Action<int, uint>(RefreshUpLevel));
+			EventManager.StartListening (Constants.EVENT_REFRESH_SYNC_HP, new Action<float, float, uint>((hp, maxHp, ownNetId) => {
+				if(!TryToConnect())
+					return;
+				if (_character.netId.Value != ownNetId)
+				return;
+				AddHpBar(hp, maxHp);
+			}));
+
+			EventManager.StartListening (Constants.EVENT_CLIENT_ADD_HP, new Action<float, float, uint>((hp, maxHp, ownNetId) => {
+				if(!TryToConnect())
+					return;
+				if (_character.netId.Value != ownNetId)
+				return;
+				AddHpBar(hp, maxHp);
+			}));
+
+			EventManager.StartListening (Constants.EVENT_CLIENT_SUBTRACT_HP, new Action<float, float, uint>((hp, maxHp, ownNetId) => {
+				if(!TryToConnect())
+					return;
+				if (_character.netId.Value != ownNetId)
+				return;
+				SubtractHpBar(hp, maxHp);
+			}));
 		}
 
 		void Update(){
 			if (!TryToConnect ()) {
-				isInitCharacterInfo = false;
 				return;
 			}
 			InitCharacterInfo ();
@@ -33,12 +57,14 @@ namespace Mob
 
 		bool TryToConnect(){
 			return NetworkHelper.instance.TryToConnect (() => {
-				if (_character != null && _levelModule != null)
+				if (!_character.IsNull() && !_levelModule.IsNull() && !_hpModule.IsNull() && !_energyModule.IsNull())
 					return true;
 				_character = Race.GetLocalCharacter ();
-				if(_character == null)
+				if(_character.IsNull())
 					return false;
 				_levelModule = _character.GetModule<LevelModule>();
+				_hpModule = _character.GetModule<HealthPowerModule>();
+				_energyModule = _character.GetModule<EnergyModule>();
 				return false;
 			});
 		}
@@ -47,24 +73,63 @@ namespace Mob
 		void InitCharacterInfo(){
 			if (isInitCharacterInfo)
 				return;
-			className.text = _character.className;
+			// className.text = _character.className;
 			RefreshLevel (_levelModule.level, _character.netId.Value);
-			level.text = "Lv. " + _levelModule.level;
 //			gainPoint.text = _character.gainPoint + "/" + LevelCalculator.GetMaxPointAt (_levelModule.level);
+			InitHpBar();
+			InitEpBar();
+			InitGainPoint();
 			isInitCharacterInfo = true;
 		}
 
-		void RefreshLevel(int level, uint ownNetId){
-			if (_levelModule == null)
-				return;
-			if (_character.netId.Value != ownNetId)
-				return;
-			this.level.text = "Lv. " + _levelModule.level;
+		void InitGainPoint(){
 
 		}
 
+		void InitHpBar(){
+			var syncField = _hpModule.syncHpField[0];
+			hpBar.SetLabel(Mathf.FloorToInt(syncField.hp), Mathf.FloorToInt(syncField.maxHp));
+			hpBar.Add(syncField.hp / syncField.maxHp, true);
+		}
+
+		void AddHpBar(float hp, float maxHp){
+			hpBar.SetLabel(Mathf.FloorToInt(hp), Mathf.FloorToInt(maxHp));
+			hpBar.Add(hp / maxHp, true);
+		}
+
+		void SubtractHpBar(float hp, float maxHp){
+			hpBar.SetLabel(Mathf.FloorToInt(hp), Mathf.FloorToInt(maxHp));
+			hpBar.Subtract(hp / maxHp, true);
+		}
+
+		void InitEpBar(){
+			var syncField = _energyModule.syncEnergyField[0];
+			epBar.SetLabel(Mathf.FloorToInt(syncField.energy), 12f);
+			epBar.Add(syncField.energy / 12f, true);
+		}
+
+		void SetEpBar(float energy){
+			epBar.SetLabel(energy, 12f);
+			epBar.Add(energy / 12, true);
+		}
+
+
+		void RefreshLevel(int level, uint ownNetId){
+			if(!TryToConnect())
+				return;
+			if (_levelModule.IsNull())
+				return;
+			if (_character.netId.Value != ownNetId)
+				return;
+			if(this.level.IsNull())
+				return;
+			this.level.text = "Lv. " + _levelModule.level;
+		}
+
 		void RefreshUpLevel(int upLevel, uint ownNetId){
-			if (_levelModule == null)
+			if(!TryToConnect())
+				return;
+			if (_levelModule.IsNull())
 				return;
 			if (_character.netId.Value != ownNetId)
 				return;

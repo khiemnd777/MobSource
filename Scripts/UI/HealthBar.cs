@@ -36,6 +36,9 @@ namespace Mob
             _label = GetChildMonoComponent<Text>("Label");
             _cachedTransform = transform;
             _originalPosition = _cachedTransform.localPosition;
+            _mainBar.fillAmount = 0f;
+            _addBar.fillAmount = 0f;
+            _subBar.fillAmount = 0f;
         }
 
         void Update(){
