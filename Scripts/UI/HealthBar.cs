@@ -28,6 +28,8 @@ namespace Mob
         Image _subBar;
         Image _addBar;
         Text _label;
+        float _value;
+        float _maxValue;
 
         void Awake(){
             _mainBar = GetChildMonoComponent<Image>("HealthBarBG/MainBar");
@@ -47,6 +49,23 @@ namespace Mob
 
         public void SetLabel(params object[] contents){
             _label.text = string.Format(labelFormat, contents);
+        }
+
+        public void SetValue(float value, float maxValue, bool ableSetLabel = true){
+            _maxValue = maxValue;
+
+            if(value - _value < 0f)
+            {
+                Subtract(value / _maxValue);
+            }
+            else
+            {
+                Add(value / _maxValue);
+            }
+            if(ableSetLabel)
+                SetLabel(value, _maxValue);
+
+            _value = value;
         }
 
         public void Subtract(float amount, bool hasEffect = true){

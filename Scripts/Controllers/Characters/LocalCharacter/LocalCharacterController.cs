@@ -21,30 +21,32 @@ namespace Mob
 		EnergyModule _energyModule;
 
 		void Start(){
-			EventManager.StartListening (Constants.EVENT_REFRESH_SYNC_LEVEL, new Action<int, uint>(RefreshLevel));
-			EventManager.StartListening (Constants.EVENT_REFRESH_SYNC_UP_LEVEL, new Action<int, uint>(RefreshUpLevel));
+			// EventManager.StartListening (Constants.EVENT_REFRESH_SYNC_LEVEL, new Action<int, uint>(RefreshLevel));
+			// EventManager.StartListening (Constants.EVENT_REFRESH_SYNC_UP_LEVEL, new Action<int, uint>(RefreshUpLevel));
+
 			EventManager.StartListening (Constants.EVENT_REFRESH_SYNC_HP, new Action<float, float, uint>((hp, maxHp, ownNetId) => {
 				if(!TryToConnect())
 					return;
 				if (_character.netId.Value != ownNetId)
 				return;
-				AddHpBar(hp, maxHp);
+				SetHpBar(hp, maxHp);
 			}));
 
-			EventManager.StartListening (Constants.EVENT_CLIENT_ADD_HP, new Action<float, float, uint>((hp, maxHp, ownNetId) => {
-				if(!TryToConnect())
-					return;
-				if (_character.netId.Value != ownNetId)
-				return;
-				AddHpBar(hp, maxHp);
-			}));
+			EventManager.StartListening(Constants.EVENT_ENERGY_CHANGED, new Action<float, uint>((energy, ownNetId) =>
+            {
+                if (!TryToConnect())
+                    return;
+                if (_character.netId.Value != ownNetId)
+                    return;
+                SetEpBar(energy);
+            }));
 
-			EventManager.StartListening (Constants.EVENT_CLIENT_SUBTRACT_HP, new Action<float, float, uint>((hp, maxHp, ownNetId) => {
+			EventManager.StartListening(Constants.EVENT_GAIN_POINT_CHANGED, new Action<float, int, uint>((gainPoint, level, ownNetId) => {
 				if(!TryToConnect())
 					return;
-				if (_character.netId.Value != ownNetId)
-				return;
-				SubtractHpBar(hp, maxHp);
+				if(_character.netId.Value != ownNetId)
+					return;
+				SetExpBar(gainPoint, level);
 			}));
 		}
 
@@ -52,7 +54,7 @@ namespace Mob
 			if (!TryToConnect ()) {
 				return;
 			}
-			InitCharacterInfo ();
+			Init();
 		}
 
 		bool TryToConnect(){
@@ -69,48 +71,41 @@ namespace Mob
 			});
 		}
 
-		bool isInitCharacterInfo;
-		void InitCharacterInfo(){
-			if (isInitCharacterInfo)
+		bool isInit;
+		void Init(){
+			if(isInit)
 				return;
-			// className.text = _character.className;
-			RefreshLevel (_levelModule.level, _character.netId.Value);
-//			gainPoint.text = _character.gainPoint + "/" + LevelCalculator.GetMaxPointAt (_levelModule.level);
-			InitHpBar();
-			InitEpBar();
-			InitGainPoint();
-			isInitCharacterInfo = true;
+
+			RefreshLevel(_levelModule.level, _character.netId.Value);
+
+			var syncHpField = _hpModule.syncHpField[0];
+			SetHpBar(syncHpField.hp, syncHpField.maxHp);
+
+			var syncEpField = _energyModule.syncEnergyField[0];
+			SetEpBar(syncEpField.energy);
+
+			isInit = true;
 		}
 
-		void InitGainPoint(){
-
-		}
-
-		void InitHpBar(){
-			var syncField = _hpModule.syncHpField[0];
-			hpBar.SetLabel(Mathf.FloorToInt(syncField.hp), Mathf.FloorToInt(syncField.maxHp));
-			hpBar.Add(syncField.hp / syncField.maxHp, true);
-		}
-
-		void AddHpBar(float hp, float maxHp){
-			hpBar.SetLabel(Mathf.FloorToInt(hp), Mathf.FloorToInt(maxHp));
-			hpBar.Add(hp / maxHp, true);
-		}
-
-		void SubtractHpBar(float hp, float maxHp){
-			hpBar.SetLabel(Mathf.FloorToInt(hp), Mathf.FloorToInt(maxHp));
-			hpBar.Subtract(hp / maxHp, true);
-		}
-
-		void InitEpBar(){
-			var syncField = _energyModule.syncEnergyField[0];
-			epBar.SetLabel(Mathf.FloorToInt(syncField.energy), 12f);
-			epBar.Add(syncField.energy / 12f, true);
+		void SetHpBar(float hp, float maxHp){
+			hpBar.SetValue(hp, maxHp);
 		}
 
 		void SetEpBar(float energy){
-			epBar.SetLabel(energy, 12f);
-			epBar.Add(energy / 12, true);
+			epBar.SetValue(energy, 12f);
+		}
+
+		void SetExpBar(float gainPoint, int level){
+			var maxPointAtLevel = LevelCalculator.GetMaxPointAt(level);
+			var minPointAtLevel = LevelCalculator.GetMinPointAt(level);
+			if(gainPoint > maxPointAtLevel){
+				maxPointAtLevel = LevelCalculator.GetMaxPointAt(level + 1);
+				minPointAtLevel = LevelCalculator.GetMinPointAt(level + 1);
+			}
+			var realRangeInBar = maxPointAtLevel - minPointAtLevel;
+			var expPoint = gainPoint - minPointAtLevel;
+			expBar.SetValue(expPoint, realRangeInBar, false);
+			expBar.SetLabel(gainPoint, maxPointAtLevel);
 		}
 
 

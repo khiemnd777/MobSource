@@ -38,6 +38,7 @@ namespace Mob
 		public const string OPPONENT_CHARACTER = "OpponentCharacter";
 
 		// Event names
+		public const string EVENT_GAIN_POINT_CHANGED = "gain-point-changed";
 		public const string EVENT_LEVEL_UP_CLIENT = "level-up-client-fired";
 		public const string EVENT_BOUGHT_ITEM_FROM_SHOP = "shop-bought-fired";
 		public const string EVENT_BOUGHT_GEAR = "gear-bought-fired";

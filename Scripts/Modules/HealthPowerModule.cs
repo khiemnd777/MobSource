@@ -48,7 +48,7 @@ namespace Mob
 		public void AddHp(float p){
 			hp = Mathf.Min(hp + p, maxHp);
 			RefreshSyncHpField ();
-			RpcAddHp(hp, maxHp);
+			RpcChangeHp(hp, maxHp);
 		}
 
 		public void AddHpEffect(){
@@ -61,7 +61,7 @@ namespace Mob
 		public void SubtractHp(float p){
 			hp = Mathf.Max(hp - p, 0f);
 			RefreshSyncHpField ();
-			RpcSubtractHp(hp, maxHp);
+			RpcChangeHp(hp, maxHp);
 		}
 
 		public void SubtractHpEffect(){

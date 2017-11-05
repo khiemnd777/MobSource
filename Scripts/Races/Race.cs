@@ -98,24 +98,22 @@ namespace Mob
 
 		// Gain point
 		public float gainPoint;
-		public float gainPointLabel;
 
 		public void AddGainPoint(float p){
 			gainPoint += p;
-			While ((inc, step) => {
-				gainPointLabel += inc;
-			}, p, 1f);
-			var gainPointValue = GetMonoComponent<Text> (Constants.ATTACKER_GAIN_POINT_LABEL);
-			if (p > 0) {
-				if (gainPointValue != null) {
-					JumpEffect (gainPointValue.transform, Vector3.one);
-					ShowSubLabel (Constants.INCREASE_LABEL, gainPointValue.transform, p);
-				}
-			}
+			var level = GetModule<LevelModule>().level;
+			RpcAddGainPointClientCallback(gainPoint, level);
 		}
 
 		public void SubtractGainPoint(float p){
 			gainPoint = Mathf.Max (gainPoint - p, 0f);
+			var level = GetModule<LevelModule>().level;
+			RpcAddGainPointClientCallback(gainPoint, level);
+		}
+
+		[ClientRpc]
+		void RpcAddGainPointClientCallback(float gainPoint, int level){
+			EventManager.TriggerEvent(Constants.EVENT_GAIN_POINT_CHANGED, new { gainPoint = gainPoint, level = level, ownNetId = netId.Value });
 		}
 
 		#endregion

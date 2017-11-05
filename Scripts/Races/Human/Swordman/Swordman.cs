@@ -43,7 +43,7 @@ namespace Mob
 		public override void DefaultValue ()
 		{
 			className = "Swordman";
-
+			AddGainPoint(0f);
 			GetModule<AffectModule> ();
 
 			GetModule<ShopModule> (x => x.Init ());

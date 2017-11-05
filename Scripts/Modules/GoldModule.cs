@@ -44,11 +44,11 @@ namespace Mob
         public void CmdRollDice()
         {
 			RollDice();
-			TargetRollDiceCallback(connectionToClient, dice);
+			RpcRollDiceCallback(dice);
         }
 
-		[TargetRpc]
-		void TargetRollDiceCallback(NetworkConnection connection, int dice){
+		[ClientRpc]
+		void RpcRollDiceCallback(int dice){
 			EventManager.TriggerEvent(Constants.EVENT_GOLD_DICE_ROLLED, new { dice = dice, ownNetId = _race.netId.Value });
 		}
 
