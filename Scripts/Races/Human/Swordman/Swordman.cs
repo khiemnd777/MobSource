@@ -126,6 +126,10 @@ namespace Mob
 				gear.AddAvailableGear<StaffBoughtItem>(x => x.inStoreState = InStoreState.Available);
 				gear.AddAvailableGear<RingBoughtItem>(x => x.inStoreState = InStoreState.Available);
 			});
+
+			GetModule<RefereeModule>(refree => {
+				refree.Join(this);
+			});
 		}
 
 		public override void OpenSkillTree(){

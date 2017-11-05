@@ -32,6 +32,7 @@ GameObject:
   - component: {fileID: 114442377586832262}
   - component: {fileID: 114944529081839330}
   - component: {fileID: 114816707503342136}
+  - component: {fileID: 114994029886558842}
   - component: {fileID: 114294130223297454}
   m_Layer: 0
   m_Name: Swordman
@@ -311,4 +312,20 @@ MonoBehaviour:
   playerNetId: 0
   targets: []
   gainPoint: 0
-  gainPointLabel: 0
+--- !u!114 &114994029886558842
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1837046623378722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff1e4179efa9a4b8b97472d4cd48fbb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerNumber: 2
+  characters: []
+  turningCharacter: {fileID: 0}
+  turningCharacterNetId: 0
+  isPlaying: 0
+  isInTurn: 0

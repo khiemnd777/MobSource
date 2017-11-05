@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -8,16 +9,19 @@ namespace Mob
 {
     public class RefereeModule : RaceModule
     {
-        public int playerNumber;
+        public int playerNumber = 2;
         public Race[] characters;
         public Race turningCharacter;
         public uint turningCharacterNetId;
         public bool isPlaying;
         public bool isInTurn;
 
+        void Awake(){
+            characters = new Race[playerNumber];
+        }
+
         void Start()
         {
-            characters = new Race[2];
             EventManager.StartListening(Constants.EVENT_REFEREE_SERVER_ENDTURNED, new Action<Race>((turningCharacter) => {
                 this.turningCharacter = turningCharacter;
                 this.turningCharacterNetId = turningCharacter.netId.Value;
@@ -77,12 +81,19 @@ namespace Mob
 
         public void AddCharacter(Race character)
         {
-            if(characters.Length >= playerNumber)
+            if(characters.Count(x => !x.IsNull()) >= playerNumber)
                 return;
-            for(var i = 0; i < characters.Length - 1; i++){
-                if(characters[i].IsNull())
-                    characters[i] = character;
+            if(characters.Count( x=> x.IsNull()) == playerNumber){
+                characters[0] = character;
+                return;
             }
+            var lastCharacter = characters[characters.Length - 1];
+            if(lastCharacter.IsNull())
+                characters[characters.Length - 1] = character;
+            // for(var i = 0; i < characters.Length; i++){
+            //     if(characters[i].IsNull())
+            //         characters[i] = character;
+            // }
         }
 
         public void Play(){
@@ -109,13 +120,13 @@ namespace Mob
         public void Join(Race character){
             if(!isServer)
                 return;
-            if(characters.Length >= playerNumber)
+            if(characters.Count(x => !x.IsNull()) >= playerNumber)
                 return;
             if(character.IsNull())
                 return;
             AddCharacter(character);
             EventManager.TriggerEvent(Constants.EVENT_REFEREE_SERVER_JOINT, new { character = character, ownNetId = _race.netId.Value });
-            RpcJoinCallback(characters.Length);
+            RpcJoinCallback(characters.Count(x => !x.IsNull()));
         }
 
         [ClientRpc]

@@ -20,6 +20,7 @@ namespace Mob
 
         void Start()
         {
+            rollBtn.interactable = false;
             rollBtn.onClick.AddListener(() =>
             {
                 if (!TryToConnect())
@@ -27,6 +28,16 @@ namespace Mob
                 _goldModule.CmdRollDice();
                 _energyModule.CmdRollDice();
             });
+
+            EventManager.StartListening(Constants.EVENT_REFEREE_CLIENT_ENDTURNED, new Action<uint>((turningCharacterNetId) => {
+                if(!TryToConnect())
+                    return;
+                if(_character.netId.Value == turningCharacterNetId){
+                    rollBtn.interactable = true;
+                }else{
+                    rollBtn.interactable = false;
+                }
+            }));
 
             EventManager.StartListening(Constants.EVENT_GOLD_CHANGED, new Action<float, uint>((gold, ownNetId) =>
             {
